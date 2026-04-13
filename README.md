@@ -8,7 +8,7 @@ Diretorio-modelo para iniciar projetos com metodologia vibe coding: **documentac
 
 ```bash
 # 1. Clone o repositorio
-git clone https://github.com/luiszxcv/project_prd_colli_example.git
+git clone https://github.com/V4-Colli-Associados/project_prd_colli_example.git
 cd project_prd_colli_example
 
 # 2. Instale as dependencias do app
