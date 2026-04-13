@@ -1,6 +1,6 @@
 # Vibe Coding Training — Desenvolvimento Agent-First
 **Status:** v1
-**Ultima Atualizacao:** 2026-04-11
+**Ultima Atualizacao:** 2026-04-13
 
 ---
 
@@ -67,7 +67,7 @@ Leia antes de fazer mudancas:
 ### Hierarquia de Conhecimento
 
 ```
-CLAUDE.md (indice, ~100 linhas)
+AGENTS.md + CLAUDE.md (raiz, indice ~progressive disclosure)
   │
   ├── docs/00-DOC-STANDARDS.md (como documentar)
   ├── docs/01-INFORMATION-ARCHITECTURE.md (rotas, entidades, navegacao)
@@ -75,12 +75,15 @@ CLAUDE.md (indice, ~100 linhas)
   ├── docs/03-VOCABULARY.md (termos canonicos)
   ├── docs/04-DATA-ARCHITECTURE.md (modelos, acesso a dados)
   ├── docs/05-ARCHITECTURE-DECISIONS.md (ADRs)
-  ├── docs/guides/ (skills operacionais)
+  ├── docs/08-AI-TOOL-CONFIG.md (pastas por ferramenta: .claude, .cursor, skills)
+  ├── docs/guides/ (skills operacionais em texto / metodologia)
   ├── docs/prd/ (product requirements)
   └── docs/specs/ (especificacoes tecnicas)
 ```
 
 O agente le o CLAUDE.md, entende o contexto geral, e entao navega para o documento relevante conforme a tarefa.
+
+**Skill ou interface:** em fluxos agent-first, e facil pedir tela no produto quando o primeiro entregavel deveria ser um playbook para o agente. Antes de priorizar UI no `app/`, leia `docs/00-DOC-STANDARDS.md` (secao **Skill versus interface**) e responda as perguntas de decisao ali — isso evita codigo de front que nao tem usuario final real.
 
 ---
 

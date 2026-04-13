@@ -36,16 +36,26 @@ export const quickStart: Step[] = [
   },
   {
     number: "02",
-    title: "Configure o CLAUDE.md",
-    description: "De contexto para a IA antes de pedir codigo",
+    title: "Configure AGENTS.md e CLAUDE.md",
+    description: "Contexto na raiz antes de pedir codigo (portatil + Claude Code)",
     details: [
-      "O arquivo CLAUDE.md na raiz e o ponto de entrada para agentes de IA.",
-      "Ele deve ter ~100 linhas: stack, convencoes, links para docs/. Funciona como indice, nao enciclopedia.",
-      "Quanto mais explicito, melhor o codigo gerado. Inclua: o que nunca fazer, bibliotecas permitidas, padroes de nomenclatura.",
+      "Na raiz: AGENTS.md (Codex, Cursor, etc.) e CLAUDE.md (Claude Code) — gemeos; mantenha ambos alinhados.",
+      "Indice curto: stack, convencoes, links para docs/. Detalhes por ferramenta: docs/08-AI-TOOL-CONFIG.md (.claude/skills, .cursor/rules, ...).",
+      "Só o app React: use app/CLAUDE.md, que aponta para a raiz.",
     ],
   },
   {
     number: "03",
+    title: "Skill ou interface?",
+    description: "Antes de UI: sera que o problema e playbook para agente, nao tela?",
+    details: [
+      "Leia docs/00-DOC-STANDARDS.md — secao Skill versus interface (produto).",
+      "Se o valor e repetibilidade para IA (criterios, checklist, governanca), prefira docs/guides/ e templates antes de crescer o app/.",
+      "Se usuario final precisa do navegador, multiusuario, permissoes ou self-service sem chat, interface em app/ faz sentido — e registre a escolha em ADR se nao for obvia.",
+    ],
+  },
+  {
+    number: "04",
     title: "Escreva a spec antes do codigo",
     description: "PRD e user stories primeiro, implementacao depois",
     details: [
@@ -55,7 +65,7 @@ export const quickStart: Step[] = [
     ],
   },
   {
-    number: "04",
+    number: "05",
     title: "Comece a codar",
     description: "Agora sim, com contexto claro, peca codigo ao agente",
     details: [
@@ -65,7 +75,7 @@ export const quickStart: Step[] = [
     ],
   },
   {
-    number: "05",
+    number: "06",
     title: "Registre o que aprendeu",
     description: "Decisoes, hipoteses e vocabulario voltam para os docs",
     details: [
@@ -77,9 +87,11 @@ export const quickStart: Step[] = [
 ];
 
 export const directoryStructure: DirectoryItem[] = [
+  { path: "AGENTS.md + CLAUDE.md", description: "Instrucoes para agentes na raiz (gemeos); mapa em docs/08", badge: "contexto-ia" },
+  { path: ".claude/ .cursor/ .agents/", description: "Skills e regras nativas das ferramentas (ver docs/08)", badge: "contexto-ia" },
   { path: "app/", description: "Codigo-fonte da aplicacao React + Vite + shadcn/ui", badge: "codigo" },
   { path: "docs/", description: "Documentacao permanente — a memoria do projeto", badge: "conhecimento" },
-  { path: "docs/00 a 07", description: "Standards, IA, design system, vocabulario, dados, ADRs, skills, agent-first", badge: "fundamentos" },
+  { path: "docs/00 a 08", description: "Standards, IA, design system, vocabulario, dados, ADRs, skills, agent-first, tool config", badge: "fundamentos" },
   { path: "docs/guides/", description: "Skills e instrucoes operacionais reutilizaveis", badge: "como fazer" },
   { path: "docs/references/", description: "Exemplos concretos e materiais de referencia", badge: "exemplos" },
   { path: "docs/templates/", description: "Templates em branco e prompts prontos para usar", badge: "templates" },
@@ -125,6 +137,14 @@ export const toolRoles: ToolRole[] = [
 ];
 
 export const faq: FaqItem[] = [
+  {
+    question: "Quais skills ja existem no projeto?",
+    answer: "Em .claude/skills/: sabatina-prd (perguntas antes de executar + PRD com decisao skill vs interface), onboarding-vibe-coding (como comecar), organizar-temp-repositorio (mover .md descartavel para temp/). Invocacao depende da ferramenta (ex. /nome no chat). Ver .claude/skills/README.md e docs/08-AI-TOOL-CONFIG.md.",
+  },
+  {
+    question: "Quando faco uma skill e quando faco uma tela no app?",
+    answer: "Skill = playbook para o agente (equipe), em docs/guides/: passos, criterios, exemplos — quando quem executa e o fluxo de IA e o problema nao exige cliente no browser. Interface = app/ quando ha usuario final, self-service, multiusuario ou permissoes. Antes de codar UI, leia docs/00-DOC-STANDARDS.md (Skill versus interface). Se a divida persistir, registre em ADR.",
+  },
   {
     question: "Por que tantos docs antes de codar?",
     answer: "Docs alimentam prompts. Sem contexto, a IA gera codigo generico. Com PRD + spec + design system + ADRs, a IA gera codigo que respeita suas decisoes, usa seus tokens visuais e segue suas convencoes. O investimento em docs se paga na primeira hora de coding.",

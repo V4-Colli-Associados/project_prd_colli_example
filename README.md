@@ -31,10 +31,17 @@ npm run build
 project_prd_colli_example/
 │
 ├── README.md                  ← Voce esta aqui
+├── AGENTS.md                  ← Instrucoes para agentes (Codex, Cursor, etc.)
+├── CLAUDE.md                  ← Instrucoes Claude Code (gemeo do AGENTS.md)
 ├── .gitignore
 │
+├── .claude/skills/            ← Skills: sabatina-prd, onboarding, organizar-temp (+ README)
+├── .cursor/rules/             ← Regras Cursor (*.mdc)
+├── .cursor/skills/            ← Agent Skills Cursor
+├── .agents/skills/            ← Skills formato Codex / interoperavel
+│
 ├── app/                       ← APLICACAO REACT
-│   ├── CLAUDE.md              ← Contexto para agentes de IA
+│   ├── CLAUDE.md              ← Contexto so do app (aponta para a raiz)
 │   ├── src/
 │   │   ├── App.tsx            ← Pagina principal (guia de uso)
 │   │   ├── data/guide.ts      ← Conteudo: steps, estrutura, tools, FAQ
@@ -53,6 +60,7 @@ project_prd_colli_example/
 │   ├── 05-ARCHITECTURE-DECISIONS.md  ← ADRs com status + Hypothesis Tracker
 │   ├── 06-SKILL-IDENTIDADE-VISUAL.md ← Guia de skills visuais para IA
 │   ├── 07-AGENT-FIRST-DEVELOPMENT.md ← Principios agent-first (OpenAI/Codex)
+│   ├── 08-AI-TOOL-CONFIG.md ← AGENTS.md, CLAUDE.md, pastas por ferramenta
 │   │
 │   ├── guides/
 │   │   └── SKILL-CREATION-GUIDE.md    ← Passo a passo para criar skills
@@ -93,8 +101,8 @@ O projeto funciona como um loop continuo entre documentacao e codigo:
          │
          ▼
   ┌──────────────┐
-  │  2. CLAUDE.md│  Configure o ponto de entrada
-  │  (indice)    │  ~100 linhas apontando para docs/
+  │  2. CONTEXTO │  AGENTS.md + CLAUDE.md na raiz; app/CLAUDE.md no shell
+  │  (indice)    │  docs/08-AI-TOOL-CONFIG.md — pastas por ferramenta
   └──────┬───────┘
          │
          ▼
@@ -115,11 +123,22 @@ O projeto funciona como um loop continuo entre documentacao e codigo:
 ### Regras-chave
 
 - **Docs antes de codigo** — dia 1: 80% docs, 20% codigo. Inverte nos dias seguintes.
-- **CLAUDE.md como indice** — ~100 linhas. Progressive disclosure, nao enciclopedia.
+- **AGENTS.md + CLAUDE.md na raiz** — gemeos: instrucoes para agentes; ~progressive disclosure, apontando para `docs/`. Detalhes por ferramenta: `docs/08-AI-TOOL-CONFIG.md`.
 - **ADRs nunca deletadas** — decisao revertida vira nova ADR com `Substitui: ADR-NNN`.
 - **Repo e a fonte de verdade** — o que o agente nao ve no repo, nao existe.
 - **Divida tecnica: pague cedo** — agentes replicam padroes ruins. Limpe regularmente.
 - **Separar por estabilidade** — fundamentos (meses) vs decisoes (semanas) vs operacao (dias).
+
+### Skill ou interface?
+
+Antes de pedir tela no `app/`, pergunte: **nao seria melhor uma skill?**
+
+- **Skill** — Playbook para o agente (equipe): passos, criterios, exemplos; vive em `docs/guides/` e afins; quem usa e o fluxo de IA, nao necessariamente um cliente no browser.
+- **Interface** — Produto para humanos: necessaria quando ha usuario final, self-service, multiusuario, permissoes ou experiencia que nao pode depender do chat.
+
+Checklist rapido: (1) o usuario primario e externo ao chat? (2) o fluxo precisa rodar sem IA aberta? (3) o problema e sobretudo “como o agente deve proceder”? Se (3) domina e (1)-(2) sao nao, comece por skill; caso contrario, planeje UI e documente em ADR se houver duvida.
+
+Detalhe e criterios completos: `docs/00-DOC-STANDARDS.md` (secao **Skill versus interface**).
 
 ---
 
@@ -165,17 +184,20 @@ O app usa JSON local (localStorage) por padrao. Para migrar:
 
 ## Criando Skills de IA
 
-Para criar uma skill de identidade visual:
+**Skills ja incluidas** (projeto, em `.claude/skills/`): **sabatina-prd** (perguntas + PRD + skill vs UI), **onboarding-vibe-coding**, **organizar-temp-repositorio** (lixo `.md` → `temp/`). Invocar pelo nome no agente (ex.: `/sabatina-prd`) conforme a ferramenta.
+
+Para criar uma skill nova (ex.: identidade visual):
 
 1. Reuna materiais (brandbook, cores HEX, fontes)
 2. Use o prompt em `docs/templates/PROMPT-CREATE-SKILL.md`
 3. Revise o SKILL.md gerado
-4. Instale em Claude.ai → Settings → Skills
-5. Teste com um dashboard e refine
+4. Coloque em `.claude/skills/<nome>/SKILL.md` (repo) ou instale em Claude.ai → Settings → Skills (conta)
+5. Teste e refine
 
 Guia completo: `docs/guides/SKILL-CREATION-GUIDE.md`
 Template: `docs/templates/SKILL-TEMPLATE.md`
 Exemplos: `docs/references/SKILL-EXAMPLES.md`
+Mapa de pastas por IA: `docs/08-AI-TOOL-CONFIG.md`
 
 ---
 

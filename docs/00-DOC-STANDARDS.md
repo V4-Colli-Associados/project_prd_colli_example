@@ -1,6 +1,6 @@
 # Documentacao do Projeto — Vibe Coding Training
 **Proposito**: Documentacao de design, arquitetura e decisoes para o projeto Vibe Coding Training
-**Ultima Atualizacao:** 2026-04-11
+**Ultima Atualizacao:** 2026-04-13
 
 ---
 
@@ -50,6 +50,37 @@ O projeto segue tres camadas de documentacao:
 
 ---
 
+## Skill versus interface (produto)
+
+Antes de desenhar telas em React ou abrir PR focado em UI, faca a pergunta de arquitetura: **este resultado precisa ser uma interface para humanos ou pode ser uma skill (playbook para agente)?**
+
+### O que e cada coisa
+
+- **Skill** — Instrucoes operacionais reutilizaveis para agentes: criterios, passos, exemplos do certo e do errado, governanca. Neste repo, o padrao e material em `docs/guides/`, `docs/templates/` e referencias em `docs/references/`, podendo ser empacotado em ferramentas (Claude, Cursor, etc.). O valor aparece quando **voce ou a equipe** executam o fluxo via chat com contexto carregado. Nao substitui sozinha um produto com login, permissoes ou escala para cliente final.
+
+- **Interface** (`app/`) — Superficie para **usuarios humanos** no produto: telas, formularios, fluxos navegaveis. Indicada quando o usuario final precisa agir sem depender do chat, quando ha multiusuario, permissoes, persistencia compartilhada, SLA de disponibilidade, ou experiencia comercial obrigatoria.
+
+### Perguntas de decisao (responda antes de codar UI)
+
+1. Quem e o usuario primario: alguem **fora** do fluxo Cursor/Claude, ou a propria equipe guiada por agente?
+2. O fluxo precisa existir **sem** ferramenta de IA aberta (ex.: cliente ou operador usando so o navegador)?
+3. O entregavel e sobretudo **procedimento repetivel e auditavel** (tende a skill) ou **experiencia visual e interacao em produto** (tende a interface)?
+4. Se voce descrever o problema em poucas linhas numa skill, o agente resolve a maior parte **sem** nova tela?
+5. Uma nova tela adiciona manutencao permanente (layout, acessibilidade, deploy) — isso se paga para o alcance do projeto?
+
+**Se a maioria aponta equipe + agente + repeticao**, nao comece por interface: crie ou atualize uma skill, valide o processo no chat, e registre em `docs/05-ARCHITECTURE-DECISIONS.md` se a escolha for deliberadamente *nao* investir em UI agora.
+
+**Se aponta usuario final, self-service obrigatorio, ou canal que nao e chat**, interface e adequada; siga entao PRD, design system e ADRs como nas demais secoes deste documento.
+
+### Erros comuns
+
+- **Tela para o que e processo interno** — Formulario ou painel que so o agente deveria seguir; custo de UX e codigo sem usuario real.
+- **Skill no lugar de produto** — Playbook solto quando o cliente ou o mercado precisam de aplicacao; falta de rastreio, permissoes e experiencia consistente.
+
+Quando a escolha nao for obvia, registre-a como ADR ou hipotese em `docs/05-ARCHITECTURE-DECISIONS.md`.
+
+---
+
 ## Nomeacao de Arquivos
 
 - Prefixo `00-` para arquivos meta/index
@@ -81,11 +112,15 @@ graph TD
 
 ## Arquivos de Contexto para IA
 
-O projeto utiliza dois arquivos-chave como pontos de entrada para agentes de IA:
+Pontos de entrada na **raiz do repositorio** (ver detalhes e pastas `.claude/`, `.cursor/`, `.agents/` em **`docs/08-AI-TOOL-CONFIG.md`**):
 
-- **CLAUDE.md** — Na raiz do projeto. Contem contexto essencial para o Claude: stack tecnologico, convencoes, comandos uteis, e links para docs relevantes. Maximo ~100 linhas. Funciona como indice, nao como enciclopedia.
+- **`AGENTS.md`** — Convencao portatil (OpenAI Codex, Cursor Agent, outras ferramentas que leem o mesmo nome). Markdown livre na raiz; nao confundir com `AGENT.md`.
 
-- **AGENTS.md** — Na raiz do projeto. Similar ao CLAUDE.md mas agnosto de ferramenta. Segue o principio de "progressive disclosure": aponta para docs/ em vez de repetir conteudo.
+- **`CLAUDE.md`** — Instrucoes carregadas pelo **Claude Code** por sessao. Deve permanecer **alinhado** ao `AGENTS.md` no que diz respeito a stack, comandos e links de documentacao. Preferencias locais opcionais: `CLAUDE.local.md` (gitignored).
+
+- **`app/CLAUDE.md`** — Escopo **apenas** do app React; aponta para os arquivos da raiz.
+
+Principio: indice e links para `docs/`, nao enciclopedia no arquivo de contexto.
 
 ---
 

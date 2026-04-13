@@ -1,4 +1,7 @@
 temp/
+# Preferencias locais Claude Code (nao commitar)
+CLAUDE.local.md
+
 node_modules/
 dist/
 .env

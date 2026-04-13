@@ -1,7 +1,9 @@
 # Vibe Coding — Guia de Uso (Shell App)
 
+**Escopo:** apenas o codigo em `app/`. Instrucoes do **repositorio inteiro** estao na raiz: `../AGENTS.md` e `../CLAUDE.md`. Leia-os antes de mudancas que afetem docs, estrutura ou metodologia.
+
 ## O que e este projeto
-Pagina interativa de guia de uso da metodologia vibe coding e da estrutura do diretorio _new-project. Serve como ponto de entrada para quem recebe o diretorio.
+Pagina interativa de guia de uso da metodologia vibe coding e da estrutura do diretorio do starter. Serve como ponto de entrada para quem recebe o repositorio.
 
 ## Stack
 - React 19 + Vite + TypeScript
@@ -20,7 +22,7 @@ Pagina interativa de guia de uso da metodologia vibe coding e da estrutura do di
 - Componentes shadcn nao editados diretamente
 
 ## Documentacao
-Leia `../docs/` para contexto completo do projeto:
+Leia `../docs/` para contexto completo do projeto (e `../docs/08-AI-TOOL-CONFIG.md` para pastas por ferramenta):
 - `00-DOC-STANDARDS.md` — padroes de documentacao
 - `02-DESIGN-SYSTEM.md` — tokens e componentes
 - `05-ARCHITECTURE-DECISIONS.md` — decisoes e hipoteses
