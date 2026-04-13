@@ -53,5 +53,5 @@ cd app && npm run build && npm run lint
 
 ## Skills: ferramenta vs metodologia
 
-- **Skills nativas da IA** (invocaveis no agente, pastas tipo `.claude/skills/`, `.cursor/skills/`): ver `docs/08-AI-TOOL-CONFIG.md`
+- **Skills nativas da IA** (invocaveis no agente): `.claude/skills/`, `.cursor/skills/`, `.agents/skills/`, `.codex/skills/` — **mesmo conteudo**; **fonte unica** `.claude/skills/`. Apos **adicionar ou modificar** qualquer skill, rodar `bash scripts/sync-skills.sh` (`--help`, `--dry-run`). Ver `docs/08-AI-TOOL-CONFIG.md`
 - **Guias longos / metodologia** para humanos e para copiar em prompts: `docs/guides/`, `docs/templates/`, `docs/references/`

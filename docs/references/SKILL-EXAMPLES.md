@@ -1,6 +1,6 @@
 # Exemplos de Skills para IA
 **Proposito**: Referencia com exemplos concretos de skills para diferentes contextos (visual, codigo, processo)
-**Ultima Atualizacao:** 2026-04-11
+**Ultima Atualizacao:** 2026-04-13
 
 > **Documentos relacionados:**
 > - `docs/guides/SKILL-CREATION-GUIDE.md` — Guia completo de criacao de skills
@@ -361,6 +361,47 @@ export function UserCard({ user, onSelect, variant = 'detailed' }: UserCardProps
 
 ---
 
+## Exemplo 4: Relatorio tipo deck (HTML semi-deterministico)
+
+**Contexto:** Apos uma **sabatina** ou **extracao** de PRD/docs, gerar um “PPT em HTML”: parte dos slides e preenchida por **JSON + script** (deterministico); parte e **HTML livre** nos slides finais (criatividade).
+
+**Onde esta no repo:**
+
+- Skill: `*/skills/relatorio-deck-html/SKILL.md` (espelhado em `.claude`, `.cursor`, `.agents`, `.codex`)
+- Template: `*/skills/relatorio-deck-html/assets/deck-base.html`
+- Script: `*/skills/relatorio-deck-html/scripts/fill-deck.mjs` (Node, sem dependencias)
+- JSON de exemplo: `*/skills/relatorio-deck-html/examples/exemplo-pos-sabatina.json`
+- Schema: `*/skills/relatorio-deck-html/references/SCHEMA-DECK.md`
+- **PowerPoint nativo:** skill `pptx` (Anthropic) no mesmo `*/skills/`; fluxo combinado em `SKILL.md` da skill
+
+**Ideia central:**
+
+| Camada | Comportamento |
+|--------|----------------|
+| `replace.*` no JSON | Texto puro; script aplica **escape HTML** → encaixa em caixas com altura limitada no CSS |
+| `raw.BULLETS_HTML`, `raw.FREE_HTML_*` | HTML **sem escape**; listas, tabelas, notas livres no mesmo tema visual |
+| Slides “Livre 1 / Livre 2” | Propositalmente **nao** determinísticos: o agente (ou humano) escreve o markup |
+
+**Comando:**
+
+```bash
+cd .claude/skills/relatorio-deck-html
+node scripts/fill-deck.mjs examples/exemplo-pos-sabatina.json
+```
+
+**Frontmatter ilustrativo** (a skill real esta na pasta acima):
+
+```markdown
+---
+name: relatorio-deck-html
+description: >-
+  Gera relatorio em HTML estilo apresentacao a partir de JSON e template;
+  slides livres em HTML. Use apos sabatina-prd ou extracao de entregas.
+---
+```
+
+---
+
 ## Observacoes Sobre os Exemplos
 
 1. **Cada skill tem personalidade propria** — a skill do DataPulse e tecnica e contida; a da SportFlow e energetica e ousada; a de padroes de codigo e precisa e prescritiva. A skill deve refletir o espirito do que ela governa.
@@ -372,3 +413,5 @@ export function UserCard({ user, onSelect, variant = 'detailed' }: UserCardProps
 4. **Palavras-gatilho na descricao variam por contexto** — a skill visual menciona "dashboard, card, botao"; a skill de e-commerce menciona "produto, carrinho, checkout"; a skill de codigo menciona "hook, servico, tipo".
 
 5. **Skills nao precisam ser visuais** — o Exemplo 3 mostra que padroes de codigo, naming conventions e arquitetura tambem se beneficiam de skills estruturadas.
+
+6. **Skills podem orquestrar artefatos hibridos** — o Exemplo 4 combina arquivo estatico (HTML), dados (JSON) e script — util quando parte do output deve ser repetivel e parte flexivel.

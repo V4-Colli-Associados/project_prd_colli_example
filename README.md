@@ -35,10 +35,11 @@ project_prd_colli_example/
 ├── CLAUDE.md                  ← Instrucoes Claude Code (gemeo do AGENTS.md)
 ├── .gitignore
 │
-├── .claude/skills/            ← Skills: sabatina-prd, onboarding, organizar-temp (+ README)
+├── .claude/skills/            ← Starter + Anthropic docx/pptx/xlsx/pdf (sync-skills.sh)
 ├── .cursor/rules/             ← Regras Cursor (*.mdc)
-├── .cursor/skills/            ← Agent Skills Cursor
-├── .agents/skills/            ← Skills formato Codex / interoperavel
+├── .cursor/skills/            ← Mesmo conteudo que .claude/skills (espelho)
+├── .agents/skills/            ← Espelho (Codex / interop)
+├── .codex/skills/             ← Espelho (Codex)
 │
 ├── app/                       ← APLICACAO REACT
 │   ├── CLAUDE.md              ← Contexto so do app (aponta para a raiz)
@@ -66,14 +67,15 @@ project_prd_colli_example/
 │   │   └── SKILL-CREATION-GUIDE.md    ← Passo a passo para criar skills
 │   │
 │   ├── references/
-│   │   └── SKILL-EXAMPLES.md          ← 3 exemplos concretos de skills
+│   │   └── SKILL-EXAMPLES.md          ← Exemplos de skills (incl. deck HTML)
 │   │
 │   └── templates/
 │       ├── SKILL-TEMPLATE.md          ← Template em branco para sua skill
 │       └── PROMPT-CREATE-SKILL.md     ← Prompts prontos para gerar skills
 │
 ├── plans/                     ← PLANEJAMENTO (sprints, backlog, tracking)
-├── scripts/                   ← AUTOMACOES (setup, seed, deploy)
+├── scripts/                   ← AUTOMACOES (setup, seed, deploy, sync-skills.sh)
+│   └── deck-report/           ← README de redirecionamento (deck real: */skills/relatorio-deck-html/)
 └── temp/                      ← LIXO CONTROLADO (git-ignored)
 ```
 
@@ -184,14 +186,14 @@ O app usa JSON local (localStorage) por padrao. Para migrar:
 
 ## Criando Skills de IA
 
-**Skills ja incluidas** (projeto, em `.claude/skills/`): **sabatina-prd** (perguntas + PRD + skill vs UI), **onboarding-vibe-coding**, **organizar-temp-repositorio** (lixo `.md` → `temp/`). Invocar pelo nome no agente (ex.: `/sabatina-prd`) conforme a ferramenta.
+**Skills ja incluidas** (espelhadas nas quatro pastas `*/skills/`): starter (**sabatina-prd**, **onboarding-vibe-coding**, **organizar-temp-repositorio**, **relatorio-deck-html**) e documentos **[Anthropic skills](https://github.com/anthropics/skills)** (**docx**, **pptx**, **xlsx**, **pdf**). Atribuicao: `docs/references/ANTHROPIC-DOCUMENT-SKILLS.md`. Editar em `.claude/skills/` e `bash scripts/sync-skills.sh` antes de commitar. **Como criar skills:** `docs/guides/SKILL-CREATION-GUIDE.md`.
 
 Para criar uma skill nova (ex.: identidade visual):
 
 1. Reuna materiais (brandbook, cores HEX, fontes)
 2. Use o prompt em `docs/templates/PROMPT-CREATE-SKILL.md`
 3. Revise o SKILL.md gerado
-4. Coloque em `.claude/skills/<nome>/SKILL.md` (repo) ou instale em Claude.ai → Settings → Skills (conta)
+4. Coloque em `.claude/skills/<nome>/SKILL.md`, rode `bash scripts/sync-skills.sh`, ou instale em Claude.ai → Settings → Skills (conta)
 5. Teste e refine
 
 Guia completo: `docs/guides/SKILL-CREATION-GUIDE.md`

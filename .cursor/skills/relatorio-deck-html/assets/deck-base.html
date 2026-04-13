@@ -1,0 +1,1753 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>%%DECK_TITLE%%</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" />
+  <style>
+    /*
+      Design system V4 Colli: preto + vermelho, logo no canto de cada slide.
+      Logo: app/public/logov4.webp (caminho relativo ao HTML em dist/ via %%LOGO_SRC%%).
+    */
+    :root {
+      --bg-deep: #030303;
+      --bg-mid: #0a0a0a;
+      --bg-elevated: #141414;
+      --surface: rgba(255, 255, 255, 0.05);
+      --text: #f5f5f5;
+      --muted: #a8a8a8;
+      --accent: #dc2626;
+      --accent-bright: #ef4444;
+      --accent-dark: #991b1b;
+      --slot-bg: rgba(220, 38, 38, 0.08);
+      --slot-border: rgba(220, 38, 38, 0.45);
+      --warn: #f87171;
+      --light-bg: #f4f4f5;
+      --light-text: #0a0a0a;
+      --light-muted: #525252;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Plus Jakarta Sans", "Segoe UI", system-ui, sans-serif;
+      background: #000000;
+      color: var(--text);
+    }
+    .deck {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+    }
+    .slide {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      background: linear-gradient(160deg, var(--bg-deep) 0%, var(--bg-mid) 45%, var(--bg-elevated) 100%);
+      border: 1px solid rgba(220, 38, 38, 0.22);
+      border-radius: 14px;
+      padding: 2rem 2.25rem;
+      padding-bottom: 2.75rem;
+      margin-bottom: 2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      page-break-after: always;
+      box-shadow: 0 24px 56px rgba(0, 0, 0, 0.55);
+    }
+    .slide--light {
+      background: linear-gradient(180deg, #fafafa 0%, var(--light-bg) 100%);
+      border-color: rgba(0, 0, 0, 0.08);
+      color: var(--light-text);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
+    }
+    .slide--light .slide-label {
+      color: var(--accent);
+      border-left-color: var(--accent);
+    }
+    .slide--light .slot {
+      color: var(--light-text);
+      background: rgba(255, 255, 255, 0.85);
+      border-color: rgba(220, 38, 38, 0.28);
+    }
+    .slide--light h2 { color: var(--light-muted); }
+    .slide--light .muted, .slide--light p.hint { color: var(--light-muted) !important; }
+    .slide-logo {
+      position: absolute;
+      bottom: 0.75rem;
+      right: 1rem;
+      height: 1.65rem;
+      width: auto;
+      max-width: 7.5rem;
+      object-fit: contain;
+      object-position: right bottom;
+      z-index: 3;
+      filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.5));
+      pointer-events: none;
+    }
+    .slide--light .slide-logo {
+      filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.12));
+    }
+    .slide-label {
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--accent-bright);
+      margin-bottom: 0.75rem;
+      padding-left: 0.65rem;
+      border-left: 3px solid var(--accent);
+    }
+    h1 {
+      font-size: 1.7rem;
+      font-weight: 800;
+      line-height: 1.15;
+      margin: 0 0 0.5rem;
+      max-height: 4.2em;
+      overflow: hidden;
+      letter-spacing: -0.02em;
+    }
+    h2 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin: 0 0 1rem;
+      max-height: 3em;
+      overflow: hidden;
+    }
+    .slot {
+      background: var(--slot-bg);
+      border: 1px dashed var(--slot-border);
+      border-radius: 10px;
+      padding: 0.65rem 0.85rem;
+      min-height: 2.75rem;
+      font-size: 0.92rem;
+      line-height: 1.45;
+      color: var(--text);
+    }
+    .slot.tall { min-height: 5.5rem; max-height: 8.5rem; overflow: hidden; }
+    .slot.medium { min-height: 3.5rem; max-height: 6rem; overflow: hidden; }
+    .slot.small { min-height: 2rem; max-height: 2.8rem; overflow: hidden; }
+    ul.compact {
+      margin: 0.35rem 0 0 1.1rem;
+      padding: 0;
+      font-size: 0.88rem;
+      line-height: 1.4;
+      max-height: 7.5rem;
+      overflow: hidden;
+    }
+    .slide--light ul.compact { color: var(--light-text); }
+    .hero-stat {
+      font-size: clamp(2.5rem, 6vw, 3.4rem);
+      font-weight: 800;
+      line-height: 1;
+      color: var(--accent-bright);
+      margin: 0.25rem 0 0.35rem;
+      text-shadow: 0 0 40px rgba(220, 38, 38, 0.35);
+    }
+    .hero-stat-label {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--muted);
+      max-width: 28ch;
+    }
+    .pillars {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+      flex: 1;
+      min-height: 0;
+      align-content: start;
+    }
+    @media (max-width: 720px) {
+      .pillars { grid-template-columns: 1fr; }
+    }
+    .pillar {
+      background: var(--surface);
+      border: 1px solid rgba(220, 38, 38, 0.25);
+      border-radius: 10px;
+      padding: 0.65rem 0.75rem;
+      min-height: 5rem;
+      max-height: 7.5rem;
+      overflow: hidden;
+    }
+    .pillar h3 {
+      margin: 0 0 0.35rem;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--accent-bright);
+    }
+    .pillar p { margin: 0; font-size: 0.82rem; line-height: 1.35; color: var(--muted); }
+    .compare {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      flex: 1;
+      min-height: 0;
+    }
+    .compare-col {
+      background: var(--surface);
+      border-radius: 10px;
+      padding: 0.75rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      max-height: 9.5rem;
+      overflow: hidden;
+    }
+    .compare-col--after { border-color: rgba(220, 38, 38, 0.45); }
+    .compare-col h3 {
+      margin: 0 0 0.4rem;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+    .compare-col--before h3 { color: var(--muted); }
+    .compare-col--after h3 { color: var(--accent-bright); }
+    .compare-col p { margin: 0; font-size: 0.85rem; line-height: 1.4; color: var(--muted); }
+    .slide--light .compare-col {
+      background: rgba(0, 0, 0, 0.04);
+      border-color: rgba(0, 0, 0, 0.08);
+    }
+    .slide--light .compare-col p { color: var(--light-muted); }
+    .slide--light .pillar .pillar-body h3 { color: var(--accent); }
+    .slide--light .pillar .pillar-body p { color: var(--light-muted); }
+    .slide-free .hint {
+      font-size: 0.72rem;
+      color: var(--warn);
+      margin-bottom: 0.5rem;
+    }
+    .free-html {
+      flex: 1;
+      border: 1px dashed rgba(220, 38, 38, 0.4);
+      border-radius: 10px;
+      padding: 1rem;
+      min-height: 10rem;
+      background: rgba(220, 38, 38, 0.05);
+      overflow: hidden;
+    }
+    .free-html:empty::before {
+      content: "Area livre: HTML customizado (tema preto + vermelho V4).";
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-style: italic;
+    }
+    .rich-html {
+      flex: 1;
+      min-height: 0;
+      overflow: auto;
+      border-radius: 10px;
+      border: 1px solid rgba(220, 38, 38, 0.35);
+      background: rgba(0, 0, 0, 0.25);
+      padding: 0.65rem 0.75rem;
+    }
+    .slide--light .rich-html {
+      background: rgba(255, 255, 255, 0.92);
+      border-color: rgba(220, 38, 38, 0.22);
+    }
+    .deck-proposal-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.78rem;
+      line-height: 1.35;
+    }
+    .deck-proposal-table th,
+    .deck-proposal-table td {
+      border: 1px solid rgba(220, 38, 38, 0.35);
+      padding: 0.45rem 0.55rem;
+      text-align: left;
+      vertical-align: top;
+    }
+    .slide--light .deck-proposal-table th,
+    .slide--light .deck-proposal-table td {
+      border-color: rgba(0, 0, 0, 0.12);
+    }
+    .deck-proposal-table thead th {
+      background: linear-gradient(180deg, rgba(220, 38, 38, 0.22), rgba(220, 38, 38, 0.12));
+      color: var(--text);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-size: 0.65rem;
+    }
+    .slide--light .deck-proposal-table thead th {
+      background: linear-gradient(180deg, #fee2e2, #fecaca);
+      color: var(--light-text);
+    }
+    .deck-proposal-table tbody tr:nth-child(even) {
+      background: rgba(255, 255, 255, 0.03);
+    }
+    .slide--light .deck-proposal-table tbody tr:nth-child(even) {
+      background: rgba(0, 0, 0, 0.03);
+    }
+    .deck-proposal-table .num { text-align: right; font-variant-numeric: tabular-nums; }
+    .deck-proposal-table .tag {
+      display: inline-block;
+      padding: 0.12rem 0.4rem;
+      border-radius: 999px;
+      font-size: 0.62rem;
+      font-weight: 700;
+      background: rgba(220, 38, 38, 0.25);
+      color: #fecaca;
+    }
+    .slide--light .deck-proposal-table .tag {
+      background: rgba(220, 38, 38, 0.15);
+      color: #991b1b;
+    }
+
+    /* --- Layout system: colunas, empilhado, placeholders --- */
+    .layout-split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.85rem 1rem;
+      flex: 1;
+      min-height: 0;
+      align-items: stretch;
+    }
+    .layout-split--55 { grid-template-columns: 1.12fr 0.88fr; }
+    .layout-split--56 { grid-template-columns: 1.18fr 0.82fr; }
+    .layout-split--37 { grid-template-columns: repeat(3, 1fr); }
+    .layout-split--tight { gap: 0.45rem; }
+    .layout-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+      flex: 1;
+      min-height: 0;
+    }
+    .layout-stack__row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      flex: 1;
+      min-height: 0;
+    }
+    .deck-col-with-icon {
+      display: flex;
+      gap: 0.55rem;
+      align-items: flex-start;
+      min-height: 0;
+    }
+    .deck-col-with-icon .slot { flex: 1; min-width: 0; }
+    .deck-metric-block { min-width: 0; }
+    .deck-pillar {
+      display: flex;
+      gap: 0.45rem;
+      align-items: flex-start;
+      min-height: 0;
+    }
+    .deck-pillar .pillar-body { flex: 1; min-width: 0; }
+    .deck-pillar .pillar-body h3 { margin: 0 0 0.35rem; }
+    .deck-pillar .pillar-body p { margin: 0; }
+    .ph-icon {
+      width: 2.35rem;
+      height: 2.35rem;
+      border-radius: 11px;
+      flex-shrink: 0;
+      background: linear-gradient(155deg, rgba(220, 38, 38, 0.32), rgba(10, 10, 10, 0.65));
+      border: 1px dashed rgba(248, 113, 113, 0.45);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.58rem;
+      font-weight: 800;
+      color: rgba(254, 202, 202, 0.95);
+      letter-spacing: 0.06em;
+      line-height: 1;
+    }
+    .ph-icon--sm {
+      width: 1.85rem;
+      height: 1.85rem;
+      font-size: 0.55rem;
+      border-radius: 8px;
+    }
+    .slide--light .ph-icon {
+      background: linear-gradient(155deg, rgba(220, 38, 38, 0.18), rgba(255, 255, 255, 0.9));
+      border-color: rgba(220, 38, 38, 0.35);
+      color: #b91c1c;
+    }
+    .ph-media {
+      border: 1px dashed rgba(220, 38, 38, 0.42);
+      border-radius: 12px;
+      background: rgba(0, 0, 0, 0.22);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-align: center;
+      padding: 0.6rem;
+      line-height: 1.35;
+      min-height: 5rem;
+    }
+    .slide--light .ph-media {
+      background: rgba(255, 255, 255, 0.88);
+      border-color: rgba(0, 0, 0, 0.14);
+      color: var(--light-muted);
+    }
+    .ph-media--hero { min-height: 7.5rem; }
+    .ph-media--sm { min-height: 3.25rem; font-size: 0.65rem; }
+    .deck-aside {
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+      min-height: 0;
+      justify-content: flex-start;
+    }
+    .deck-chart-legend {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      font-size: 0.72rem;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+    .deck-chart-legend li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.45rem;
+      margin-bottom: 0.4rem;
+    }
+    .deck-chart-legend .swatch {
+      width: 0.6rem;
+      height: 0.6rem;
+      border-radius: 3px;
+      flex-shrink: 0;
+      margin-top: 0.15rem;
+      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12);
+    }
+    .slide--light .deck-chart-legend { color: var(--light-muted); }
+    .slide--light .deck-chart-legend .swatch {
+      box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12);
+    }
+    .deck-chart-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.5rem 0.6rem;
+      background: rgba(0, 0, 0, 0.18);
+    }
+    .slide--light .deck-chart-wrap {
+      background: rgba(0, 0, 0, 0.04);
+    }
+    .deck-chart-wrap svg {
+      display: block;
+      width: 100%;
+      max-height: 9.5rem;
+      height: auto;
+    }
+    .rich-html.deck-chart-wrap--main {
+      flex: 1;
+      background: transparent;
+      border: none;
+      padding: 0.2rem 0.35rem 0.35rem;
+    }
+    .slide--light .rich-html.deck-chart-wrap--main {
+      background: transparent;
+      border: none;
+    }
+    .pillar .deck-pillar {
+      align-items: flex-start;
+      min-height: 4.5rem;
+    }
+    .pillar .pillar-body {
+      flex: 1;
+      min-width: 0;
+    }
+    .pillar .pillar-body h3 {
+      margin: 0 0 0.35rem;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--accent-bright);
+    }
+    .pillar .pillar-body p {
+      margin: 0;
+      font-size: 0.82rem;
+      line-height: 1.35;
+      color: var(--muted);
+    }
+    @media (max-width: 720px) {
+      .layout-split,
+      .layout-split--55,
+      .layout-split--56 {
+        grid-template-columns: 1fr;
+      }
+    }
+    .accent-bar {
+      height: 4px;
+      width: 4.5rem;
+      border-radius: 2px;
+      background: linear-gradient(90deg, var(--accent-dark), var(--accent-bright));
+      margin-bottom: 0.75rem;
+    }
+    .export-toolbar {
+      position: sticky;
+      top: 0;
+      z-index: 9999;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.65rem 1rem 0.75rem;
+      background: rgba(8, 8, 8, 0.94);
+      border-bottom: 1px solid rgba(220, 38, 38, 0.35);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    .export-toolbar .export-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      justify-content: center;
+      align-items: center;
+    }
+    .export-toolbar button {
+      font-family: inherit;
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 0.55rem 1.15rem;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #fff;
+      cursor: pointer;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      transition: transform 0.12s ease, box-shadow 0.12s ease;
+    }
+    .export-toolbar button .export-ico {
+      font-size: 1.05rem;
+      line-height: 1;
+      opacity: 0.95;
+    }
+    .export-toolbar button:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 22px rgba(0, 0, 0, 0.45);
+    }
+    .export-toolbar button:focus-visible {
+      outline: 2px solid var(--accent-bright);
+      outline-offset: 2px;
+    }
+    .export-toolbar button:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .export-toolbar .btn-pdf {
+      background: linear-gradient(145deg, #ef4444, #b91c1c);
+      border-color: rgba(252, 165, 165, 0.5);
+    }
+    .export-toolbar .btn-pptx {
+      background: linear-gradient(145deg, #404040, #171717);
+      border-color: rgba(220, 38, 38, 0.55);
+    }
+    .export-toolbar .btn-pptx-raster {
+      font-size: 0.78rem;
+      padding: 0.45rem 0.85rem;
+      opacity: 0.92;
+    }
+    .export-toolbar .btn-print {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.4rem 0.75rem;
+      background: transparent;
+      border: 1px dashed rgba(163, 163, 163, 0.45);
+      color: #a3a3a3;
+      box-shadow: none;
+    }
+    .export-toolbar .btn-print:hover:not(:disabled) {
+      border-style: solid;
+      color: #e5e5e5;
+    }
+    .export-toolbar .export-hint {
+      font-size: 0.62rem;
+      color: #737373;
+      line-height: 1.4;
+      margin: 0;
+      text-align: center;
+      max-width: 52ch;
+    }
+    .export-toolbar .export-progress {
+      font-size: 0.7rem;
+      color: #fca5a5;
+      min-height: 1.1em;
+      margin: 0;
+    }
+    @media print {
+      @page {
+        size: landscape;
+        margin: 10mm;
+      }
+      .export-toolbar {
+        display: none !important;
+      }
+      body {
+        background: #fff;
+        color: #000;
+      }
+      .slide {
+        box-shadow: none;
+        border: 1px solid #ccc;
+        page-break-inside: avoid;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      .slide--light { border-color: #999; }
+      .slot, .free-html, .pillar, .compare-col { border-color: #999; }
+    }
+  </style>
+</head>
+<body>
+  <header class="export-toolbar no-print" aria-label="Exportar deck">
+    <div class="export-actions">
+      <button type="button" class="btn-pdf" id="btn-download-pdf" title="Gera um .pdf com uma pagina por slide (captura visual)">
+        <span class="export-ico" aria-hidden="true">&#128196;</span>
+        Baixar PDF
+      </button>
+      <button type="button" class="btn-pptx" id="btn-download-pptx" title="PPTX com caixas de texto e formas editaveis (PptxGenJS)">
+        <span class="export-ico" aria-hidden="true">&#128189;</span>
+        PPTX editável
+      </button>
+      <button type="button" class="btn-pptx btn-pptx-raster" id="btn-download-pptx-raster" title="PPTX com cada slide como JPEG (pixel-perfect; nao editavel)">
+        <span class="export-ico" aria-hidden="true">&#128444;</span>
+        PPTX imagem
+      </button>
+      <button type="button" class="btn-print" id="btn-print-browser" title="Dialogo de impressao do navegador">Imprimir…</button>
+    </div>
+    <p class="export-progress" id="export-progress" aria-live="polite"></p>
+    <p class="export-hint">
+      <strong>PDF</strong> e <strong>PPTX imagem</strong> usam captura (<strong>html2canvas</strong>). <strong>PPTX editável</strong> usa texto, <strong>tabelas nativas</strong> (de <code>.rich-html table</code>) e <strong>SVG rasterizado para PNG</strong> (PowerPoint nao embute WebP no canto). Motor de preenchimento: <code>scripts/skill-tools/deck-fill.mjs</code>. Skill <code>pptx</code>: OOXML avançado.
+    </p>
+  </header>
+  <div class="deck">
+
+    <section class="slide">
+      <img class="slide-logo" src="%%LOGO_SRC%%" alt="V4 Colli Associados" width="120" height="36" decoding="async" />
+      <div class="accent-bar"></div>
+      <span class="slide-label">Abertura</span>
+      <div class="layout-split layout-split--55">
+        <div class="slide-open-copy" style="min-width:0;display:flex;flex-direction:column;gap:0.35rem;">
+          <h1 class="slot small" style="border:none;background:transparent;padding:0;">%%TITLE%%</h1>
+          <h2 class="slot small" style="border:none;background:transparent;color:var(--muted);padding:0;">%%SUBTITLE%%</h2>
+          <p class="slot small" style="margin-top:auto;font-size:0.78rem;color:var(--muted);border:none;background:transparent;">%%META_LINE%%</p>
+        </div>
+        <div class="ph-media ph-media--hero"><span>Placeholder · imagem hero · produto · diagrama</span></div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <img class="slide-logo" src="%%LOGO_SRC%%" alt="V4 Colli Associados" width="120" height="36" decoding="async" />
+      <span class="slide-label">Impacto em destaque</span>
+      <div class="layout-split layout-split--tight">
+        <div class="deck-metric-block">
+          <p class="hero-stat-label">%%BIG_STAT_LABEL%%</p>
+          <p class="hero-stat">%%BIG_STAT%%</p>
+        </div>
+        <div class="layout-stack">
+          <div class="slot medium" style="margin:0;">%%IMPACT_LINE%%</div>
+          <div class="layout-split layout-split--37 layout-split--tight" style="margin-top:0.15rem;">
+            <div class="ph-icon ph-icon--sm" title="Icone KPI">KPI</div>
+            <div class="ph-icon ph-icon--sm" title="Icone financeiro">$</div>
+            <div class="ph-icon ph-icon--sm" title="Icone operacao">OP</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide slide--light">
+      <img class="slide-logo" src="%%LOGO_SRC%%" alt="V4 Colli Associados" width="120" height="36" decoding="async" />
+      <span class="slide-label">Problema &amp; objetivo</span>
+      <div class="layout-split">
+        <div style="min-width:0;display:flex;flex-direction:column;gap:0.35rem;">
+          <p class="muted" style="margin:0;font-size:0.72rem;">Contexto / dor</p>
+          <div class="slot tall" style="max-height:8.5rem;">%%PROBLEM%%</div>
+        </div>
+        <div style="min-width:0;display:flex;flex-direction:column;gap:0.35rem;">
+          <p class="muted" style="margin:0;font-size:0.72rem;">Objetivo principal</p>
+          <div class="slot medium" style="max-height:8.5rem;">%%GOAL%%</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <img class="slide-logo" src="%%LOGO_SRC%%" alt="V4 Colli Associados" width="120" height="36" decoding="async" />
+      <span class="slide-label">Usuario &amp; decisao Skill vs Interface</span>
+      <div class="layout-split">
+        <div class="deck-col-with-icon">
+          <div class="ph-icon" title="Usuario">USR</div>
+          <div class="slot medium" style="max-height:7.5rem;">%%USER_PRIMARY%%</div>
+        </div>
+        <div class="deck-col-with-icon">
+          <div class="ph-icon" title="Decisao">UX</div>
+          <div style="min-width:0;">
+            <p style="margin:0 0 0.35rem;font-size:0.72rem;color:var(--muted);">Decisao (skill / interface / hibrido)</p>
+            <div class="slot tall" style="max-height:7rem;">%%SKILL_OR_UI%%</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <img class="slide-logo" src="%%LOGO_SRC%%" alt="V4 Colli Associados" width="120" height="36" decoding="async" />
+      <span class="slide-label">Escopo &amp; fora de escopo</span>
+      <div class="layout-split" style="flex:1;min-height:0;">
+        <div style="min-width:0;">
+          <p style="margin:0 0 0.35rem;font-size:0.72rem;color:var(--muted);">Dentro do escopo</p>
+          <div class="slot tall" style="max-height:9rem;">%%SCOPE_IN%%</div>
+        </div>
+        <div style="min-width:0;">
+          <p style="margin:0 0 0.35rem;font-size:0.72rem;color:var(--muted);">Fora do escopo</p>
+          <div class="slot tall" style="max-height:9rem;">%%SCOPE_OUT%%</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide slide--light">
+      <img class="slide-logo" src="%%LOGO_SRC%%" alt="V4 Colli Associados" width="120" height="36" decoding="async" />
+      <span class="slide-label">Requisitos &amp; criterios</span>
+      <p class="muted" style="margin:0 0 0.35rem;font-size:0.72rem;">Top requisitos (P0/P1)</p>
+      %%BULLETS_HTML%%
+      <p class="muted" style="margin:0.75rem 0 0.35rem;font-size:0.72rem;">Criterio de sucesso mensuravel</p>
+      <div class="slot medium">%%SUCCESS_METRIC%%</div>
+    </section>
+
+    <section class="slide">
+      <img class="slide-logo" src="%%LOGO_SRC%%" alt="V4 Colli Associados" width="120" height="36" decoding="async" />
+      <span class="slide-label">Por que agora</span>
+      <h2 class="slot small" style="border:none;background:transparent;padding:0;color:var(--text);">%%WHY_NOW_TITLE%%</h2>
+      <div class="slot medium" style="max-height:5rem;">%%WHY_NOW_BODY%%</div>
+      <div style="margin-top:0.6rem;flex:1;min-height:0;overflow:hidden;">%%TIMELINE_HTML%%</div>
+    </section>
+
+    <section class="slide">
+      <img class="slide-logo" src="%%LOGO_SRC%%" alt="V4 Colli Associados" width="120" height="36" decoding="async" />
+      <span class="slide-label">Solucao em pilares</span>
+      <div class="pillars">
+        <div class="pillar">
+          <div class="deck-pillar">
+            <div class="ph-icon ph-icon--sm" title="Pilar 1">P1</div>
+            <div class="pillar-body">
+              <h3>%%PILLAR_1_TITLE%%</h3>
+              <p>%%PILLAR_1_DESC%%</p>
+            </div>
+          </div>
+        </div>
+        <div class="pillar">
+          <div class="deck-pillar">
+            <div class="ph-icon ph-icon--sm" title="Pilar 2">P2</div>
+            <div class="pillar-body">
+              <h3>%%PILLAR_2_TITLE%%</h3>
+              <p>%%PILLAR_2_DESC%%</p>
+            </div>
+          </div>
+        </div>
+        <div class="pillar">
+          <div class="deck-pillar">
+            <div class="ph-icon ph-icon--sm" title="Pilar 3">P3</div>
+            <div class="pillar-body">
+              <h3>%%PILLAR_3_TITLE%%</h3>
+              <p>%%PILLAR_3_DESC%%</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide slide--light">
+      <img class="slide-logo" src="%%LOGO_SRC%%" alt="V4 Colli Associados" width="120" height="36" decoding="async" />
+      <span class="slide-label">Antes &amp; depois</span>
+      <div class="compare">
+        <div class="compare-col compare-col--before">
+          <div class="deck-pillar" style="margin-bottom:0.4rem;">
+            <div class="ph-icon ph-icon--sm" title="Antes">−</div>
+            <div class="pillar-body">
+              <h3 style="margin:0 0 0.35rem;">%%BEFORE_TITLE%%</h3>
+            </div>
+          </div>
+          <p>%%BEFORE_BODY%%</p>
+        </div>
+        <div class="compare-col compare-col--after">
+          <div class="deck-pillar" style="margin-bottom:0.4rem;">
+            <div class="ph-icon ph-icon--sm" title="Depois">+</div>
+            <div class="pillar-body">
+              <h3 style="margin:0 0 0.35rem;">%%AFTER_TITLE%%</h3>
+            </div>
+          </div>
+          <p>%%AFTER_BODY%%</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <img class="slide-logo" src="%%LOGO_SRC%%" alt="V4 Colli Associados" width="120" height="36" decoding="async" />
+      <span class="slide-label">Stack &amp; tecnologia</span>
+      <div class="layout-split layout-split--56">
+        <div class="layout-stack" style="min-width:0;">
+          <h2 class="slot small" style="border:none;background:transparent;padding:0;">%%TECH_TITLE%%</h2>
+          <div class="slot tall" style="max-height:6rem;">%%TECH_BODY%%</div>
+          <div style="overflow:hidden;max-height:4.5rem;">%%TECH_BADGES_HTML%%</div>
+        </div>
+        <div class="layout-stack" style="min-width:0;">
+          <div class="ph-media ph-media--sm" style="min-height:4.8rem;"><span>Arquitetura · print · diagrama C4</span></div>
+          <div class="ph-icon ph-icon--sm" style="width:100%;max-width:4rem;margin:0 auto;" title="Stack icon">API</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <img class="slide-logo" src="%%LOGO_SRC%%" alt="V4 Colli Associados" width="120" height="36" decoding="async" />
+      <span class="slide-label">Metricas &amp; KPIs</span>
+      <p style="margin:0 0 0.45rem;font-size:0.72rem;color:var(--muted);">%%KPI_INTRO%%</p>
+      <div class="layout-split layout-split--tight">
+        <div class="kpi-zone" style="flex:1;overflow:hidden;max-height:8.5rem;min-width:0;">%%KPI_HTML%%</div>
+        <div class="ph-media ph-media--sm" style="min-height:6.5rem;align-self:stretch;"><span>Mini dashboard · print</span></div>
+      </div>
+    </section>
+
+    <section class="slide slide--light">
+      <img class="slide-logo" src="%%LOGO_SRC%%" alt="V4 Colli Associados" width="120" height="36" decoding="async" />
+      <span class="slide-label">Pessoas &amp; stakeholders</span>
+      <div class="layout-split layout-split--56 layout-split--tight" style="flex:1;min-height:0;">
+        <div class="layout-stack" style="min-width:0;">
+          <div class="deck-col-with-icon">
+            <div class="ph-icon ph-icon--sm" title="Stakeholders">S</div>
+            <h2 class="slot small" style="border:none;background:transparent;padding:0;color:var(--light-text);margin:0;flex:1;">%%STAKE_TITLE%%</h2>
+          </div>
+          <div class="slot tall" style="max-height:7rem;">%%STAKE_BODY%%</div>
+        </div>
+        <div class="ph-media ph-media--sm" style="min-height:6.5rem;align-self:stretch;"><span>Foto equipe · logos parceiros</span></div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <img class="slide-logo" src="%%LOGO_SRC%%" alt="V4 Colli Associados" width="120" height="36" decoding="async" />
+      <span class="slide-label">Riscos &amp; proximos passos</span>
+      <div class="layout-stack" style="flex:1;min-height:0;">
+        <div class="layout-split layout-split--tight">
+          <div class="slot medium" style="max-height:5rem;">%%RISKS%%</div>
+          <div class="ph-media ph-media--sm" style="min-height:5rem;"><span>Matriz risco · heatmap</span></div>
+        </div>
+        <div>
+          <p style="margin:0 0 0.35rem;font-size:0.72rem;color:var(--muted);">Proximos passos</p>
+          <div class="slot tall" style="max-height:5.5rem;">%%NEXT_STEPS%%</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <img class="slide-logo" src="%%LOGO_SRC%%" alt="V4 Colli Associados" width="120" height="36" decoding="async" />
+      <div class="accent-bar"></div>
+      <span class="slide-label">Fechamento</span>
+      <h1 class="slot small" style="border:none;background:transparent;padding:0;">%%CTA_TITLE%%</h1>
+      <h2 class="slot small" style="border:none;background:transparent;color:var(--muted);padding:0;">%%CTA_SUB%%</h2>
+      <div class="slot tall" style="margin-top:0.75rem;">%%CTA_BODY%%</div>
+    </section>
+
+    <section class="slide slide--light">
+      <img class="slide-logo" src="%%LOGO_SRC%%" alt="V4 Colli Associados" width="120" height="36" decoding="async" />
+      <span class="slide-label">Proposta comercial — investimento &amp; pacotes</span>
+      <p class="muted" style="margin:0 0 0.5rem;font-size:0.72rem;">%%COMMERCIAL_BLURB%%</p>
+      <div class="rich-html deck-table-wrap">%%PRICING_TABLE_HTML%%</div>
+    </section>
+
+    <section class="slide">
+      <img class="slide-logo" src="%%LOGO_SRC%%" alt="V4 Colli Associados" width="120" height="36" decoding="async" />
+      <span class="slide-label">Cenario de receita &amp; composicao (ilustrativo)</span>
+      <p class="muted" style="margin:0 0 0.45rem;font-size:0.72rem;">%%CHART_CAPTION%%</p>
+      <div class="layout-split layout-split--56 layout-split--tight" style="flex:1;min-height:0;">
+        <div class="rich-html deck-chart-wrap deck-chart-wrap--main">%%CHART_SVG_HTML%%</div>
+        <aside class="deck-aside">
+          %%CHART_LEGEND_HTML%%
+          <div class="ph-media ph-media--sm"><span>Screenshot · mock · evidencia</span></div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="slide slide-free">
+      <img class="slide-logo" src="%%LOGO_SRC%%" alt="V4 Colli Associados" width="120" height="36" decoding="async" />
+      <span class="slide-label">Livre 1 — HTML customizado</span>
+      <p class="hint">Nao deterministico: HTML no tema V4 (preto, vermelho).</p>
+      <div class="free-html">%%FREE_HTML_1%%</div>
+    </section>
+
+    <section class="slide slide-free">
+      <img class="slide-logo" src="%%LOGO_SRC%%" alt="V4 Colli Associados" width="120" height="36" decoding="async" />
+      <span class="slide-label">Livre 2 — HTML customizado</span>
+      <p class="hint">Diagrama, tabela, notas de workshop, ou evidencias.</p>
+      <div class="free-html">%%FREE_HTML_2%%</div>
+    </section>
+
+  </div>
+  <!-- Resolve logo: %%LOGO_SRC%% sem fill-deck quebra o browser; file:// precisa de URL absoluta -->
+  <script>
+(function () {
+  var REL_APP_LOGO = "../../../../app/public/logov4.webp";
+  function defaultLogoAbs() {
+    try {
+      return new URL(REL_APP_LOGO, window.location.href).href;
+    } catch (e) {
+      return REL_APP_LOGO;
+    }
+  }
+  function normalizeLogoSrc(attr) {
+    if (!attr || /%%/.test(attr)) return defaultLogoAbs();
+    try {
+      if (/^data:/i.test(attr)) return attr;
+      if (/^https?:\/\//i.test(attr)) return attr;
+      return new URL(attr, window.location.href).href;
+    } catch (e2) {
+      return defaultLogoAbs();
+    }
+  }
+  function fixSlideLogos() {
+    var fallback = defaultLogoAbs();
+    document.querySelectorAll("img.slide-logo").forEach(function (img) {
+      img.src = normalizeLogoSrc(img.getAttribute("src"));
+      img.addEventListener(
+        "error",
+        function () {
+          if (img.dataset.deckLogoErr) return;
+          img.dataset.deckLogoErr = "1";
+          if (img.src !== fallback) img.src = fallback;
+        },
+        { once: true }
+      );
+    });
+  }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", fixSlideLogos);
+  } else {
+    fixSlideLogos();
+  }
+})();
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js" crossorigin="anonymous"></script>
+  <script>
+(function () {
+  var progressEl = document.getElementById("export-progress");
+  var btnPdf = document.getElementById("btn-download-pdf");
+  var btnPptx = document.getElementById("btn-download-pptx");
+  var btnPptxRaster = document.getElementById("btn-download-pptx-raster");
+  var btnPrint = document.getElementById("btn-print-browser");
+
+  function setProgress(msg) {
+    if (progressEl) progressEl.textContent = msg || "";
+  }
+  function setBusy(busy) {
+    btnPdf.disabled = busy;
+    btnPptx.disabled = busy;
+    if (btnPptxRaster) btnPptxRaster.disabled = busy;
+    if (btnPrint) btnPrint.disabled = busy;
+  }
+  function safeFilename(name) {
+    return String(name || "deck")
+      .replace(/[^\w\u00C0-\u024f\d-]+/gi, "_")
+      .replace(/_+/g, "_")
+      .slice(0, 80) || "deck";
+  }
+  function plainText(el) {
+    if (!el) return "";
+    return String(el.innerText || "")
+      .replace(/\u00a0/g, " ")
+      .replace(/\r\n/g, "\n")
+      .trim();
+  }
+  /** PowerPoint / PptxGenJS nao embute WebP de forma fiavel — converter para PNG. */
+  function dataUrlToPngForPptx(dataUrl) {
+    return new Promise(function (resolve, reject) {
+      if (!dataUrl || dataUrl.indexOf("data:image/png") === 0) return resolve(dataUrl);
+      var img = new Image();
+      img.onload = function () {
+        try {
+          var c = document.createElement("canvas");
+          c.width = Math.max(1, img.naturalWidth || img.width || 120);
+          c.height = Math.max(1, img.naturalHeight || img.height || 36);
+          var ctx = c.getContext("2d");
+          ctx.drawImage(img, 0, 0);
+          resolve(c.toDataURL("image/png"));
+        } catch (err) {
+          reject(err);
+        }
+      };
+      img.onerror = function () {
+        reject(new Error("Falha ao decodificar imagem para PPTX"));
+      };
+      img.src = dataUrl;
+    });
+  }
+  /** SVG inline -> PNG (viewBox / dimensoes nativas; evita raster vazio no PPTX). */
+  function svgToPngDataUrlForPptx(svgEl) {
+    return new Promise(function (resolve, reject) {
+      if (!svgEl) return reject(new Error("SVG ausente"));
+      var ser = new XMLSerializer().serializeToString(svgEl);
+      var svgDu = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(ser);
+      var vb = (svgEl.getAttribute("viewBox") || "").trim().split(/[\s,]+/);
+      var vw = 520;
+      var vh = 168;
+      if (vb.length >= 4) {
+        vw = parseFloat(vb[2]) || vw;
+        vh = parseFloat(vb[3]) || vh;
+      } else {
+        vw = parseFloat(svgEl.getAttribute("width")) || vw;
+        vh = parseFloat(svgEl.getAttribute("height")) || vh;
+      }
+      var scale = 2;
+      var img = new Image();
+      img.onload = function () {
+        try {
+          var cw = Math.max(1, Math.round(vw * scale));
+          var ch = Math.max(1, Math.round(vh * scale));
+          var c = document.createElement("canvas");
+          c.width = cw;
+          c.height = ch;
+          var ctx = c.getContext("2d");
+          ctx.drawImage(img, 0, 0, cw, ch);
+          resolve({ dataUrl: c.toDataURL("image/png"), aspect: vw / Math.max(0.01, vh) });
+        } catch (e) {
+          reject(e);
+        }
+      };
+      img.onerror = function () {
+        reject(new Error("Falha ao rasterizar SVG para PPTX"));
+      };
+      img.src = svgDu;
+    });
+  }
+  function pptxSlotFrame(slide, pres, x, y, w, hBox, isLight) {
+    if (!slide || !pres || !pres.shapes) return;
+    var fillC = isLight ? "FFF1F2" : "1C1515";
+    var lineC = isLight ? "B91C1C" : "DC2626";
+    var pad = 0.06;
+    slide.addShape(pres.shapes.RECTANGLE, {
+      x: Math.max(0.08, x - pad),
+      y: y - pad,
+      w: w + 2 * pad,
+      h: hBox + 2 * pad,
+      fill: { color: fillC },
+      line: { color: lineC, width: 0.5 }
+    });
+  }
+  function htmlTableToPptxRows(table, colors, isLight) {
+    var rows = [];
+    table.querySelectorAll("tr").forEach(function (tr) {
+      var row = [];
+      tr.querySelectorAll("th, td").forEach(function (cell) {
+        var headish =
+          cell.tagName === "TH" || (cell.closest && cell.closest("thead"));
+        var fillCol = headish
+          ? isLight
+            ? "FEE2E2"
+            : "451A1A"
+          : isLight
+            ? "FAFAFA"
+            : "1A1A1A";
+        row.push({
+          text: plainText(cell),
+          options: {
+            bold: !!headish,
+            color: colors.txt,
+            fill: { color: fillCol }
+          }
+        });
+      });
+      if (row.length) rows.push(row);
+    });
+    return rows;
+  }
+  async function appendRichHtmlToPptx(slide, node, y, colors, isLight, area, pres) {
+    area = area || { x: 0.45, w: 9 };
+    var x0 = area.x;
+    var w0 = area.w;
+    var y2 = y;
+    var tbl = node.querySelector("table");
+    if (tbl) {
+      var rows = htmlTableToPptxRows(tbl, colors, isLight);
+      if (rows.length && typeof slide.addTable === "function") {
+        var ncol = rows[0].length || 1;
+        var innerW = w0;
+        var colW = [];
+        var cw = innerW / ncol;
+        for (var ci = 0; ci < ncol; ci++) colW.push(cw);
+        var th = Math.min(3.2, 0.4 + rows.length * 0.36);
+        if (pres) pptxSlotFrame(slide, pres, x0, y2, innerW, th, isLight);
+        try {
+          slide.addTable(rows, {
+            x: x0,
+            y: y2,
+            w: innerW,
+            h: th,
+            fontSize: 9,
+            border: { type: "solid", color: isLight ? "D4D4D4" : "525252", pt: 0.5 },
+            colW: colW
+          });
+          y2 += th + 0.12;
+        } catch (te) {
+          console.warn("addTable", te);
+        }
+      }
+    }
+    var svgEl = node.querySelector("svg");
+    if (svgEl) {
+      try {
+        var svgPack = await svgToPngDataUrlForPptx(svgEl);
+        var pngC = svgPack.dataUrl;
+        var ar = svgPack.aspect || 2.5;
+        var maxW = Math.max(2.2, w0 - 0.2);
+        var maxH = 2.5;
+        var iw = maxW;
+        var ih = iw / ar;
+        if (ih > maxH) {
+          ih = maxH;
+          iw = ih * ar;
+        }
+        slide.addImage({ data: pngC, x: x0, y: y2, w: iw, h: ih });
+        y2 += ih + 0.12;
+      } catch (se) {
+        console.warn("svg pptx", se);
+      }
+    }
+    if (!tbl && !svgEl) {
+      var rt = plainText(node);
+      if (rt) {
+        var est = Math.min(2.6, 0.4 + rt.split("\n").length * 0.2);
+        slide.addText(rt, { x: x0, y: y2, w: w0, h: est, fontSize: 10, color: colors.txt, valign: "top", margin: 0 });
+        y2 += est + 0.1;
+      }
+    }
+    return y2;
+  }
+
+  /**
+   * Export PPTX: percorre conteudo de uma coluna (layout-split, layout-stack, aside).
+   */
+  async function pptxWalkColumn(slide, pres, el, x0, w0, y0, colors, isLight) {
+    var y = y0;
+    var chs = Array.from(el.children || []);
+    for (var i = 0; i < chs.length; i++) {
+      var ch = chs[i];
+      if (!ch || !ch.matches) continue;
+      if (ch.classList && ch.classList.contains("ph-icon")) continue;
+      if (ch.classList && ch.classList.contains("ph-media")) {
+        var pm = plainText(ch);
+        if (pm) {
+          slide.addText("[media] " + pm, { x: x0, y: y, w: w0, h: 0.38, fontSize: 8, color: colors.mut, valign: "top", margin: 0 });
+          y += 0.42;
+        }
+        continue;
+      }
+      if (ch.classList && ch.classList.contains("rich-html")) {
+        y = await appendRichHtmlToPptx(slide, ch, y, colors, isLight, { x: x0, w: w0 }, pres);
+        continue;
+      }
+      if (ch.classList && ch.classList.contains("layout-split")) {
+        var sub = Array.from(ch.children).filter(function (c) {
+          return c.nodeType === 1;
+        });
+        var sn = sub.length || 1;
+        var sgap = 0.2;
+        var sw = (w0 - sgap * Math.max(0, sn - 1)) / sn;
+        var yRow = y;
+        var yMax = y;
+        for (var sj = 0; sj < sub.length; sj++) {
+          var sx = x0 + sj * (sw + sgap);
+          var yj = await pptxWalkColumn(slide, pres, sub[sj], sx, sw, yRow, colors, isLight);
+          yMax = Math.max(yMax, yj);
+        }
+        y = yMax;
+        continue;
+      }
+      if (ch.classList && ch.classList.contains("layout-stack")) {
+        y = await pptxWalkColumn(slide, pres, ch, x0, w0, y, colors, isLight);
+        continue;
+      }
+      if (
+        ch.classList &&
+        (ch.classList.contains("deck-col-with-icon") ||
+          ch.classList.contains("deck-metric-block") ||
+          ch.classList.contains("deck-aside") ||
+          ch.tagName === "ASIDE")
+      ) {
+        y = await pptxWalkColumn(slide, pres, ch, x0, w0, y, colors, isLight);
+        continue;
+      }
+      if (ch.matches("ul.deck-chart-legend")) {
+        var legLis = ch.querySelectorAll(":scope > li");
+        for (var li = 0; li < legLis.length; li++) {
+          var lt = plainText(legLis[li]);
+          if (lt) {
+            slide.addText(lt, { x: x0, y: y, w: w0, h: 0.34, fontSize: 9, color: colors.mut, valign: "top", margin: 0 });
+            y += 0.36;
+          }
+        }
+        continue;
+      }
+      if (ch.matches("ul.compact")) {
+        var lisC = ch.querySelectorAll(":scope > li");
+        if (lisC.length) {
+          var partsC = [];
+          for (var uc = 0; uc < lisC.length; uc++) {
+            partsC.push({
+              text: plainText(lisC[uc]),
+              options: { bullet: true, breakLine: uc < lisC.length - 1, fontSize: 9, color: colors.txt }
+            });
+          }
+          var uhc = Math.min(2.4, 0.26 + lisC.length * 0.28);
+          slide.addText(partsC, { x: x0, y: y, w: w0, h: uhc, fontSize: 9, color: colors.txt, valign: "top", margin: 0 });
+          y += uhc + 0.08;
+        }
+        continue;
+      }
+      if (ch.matches("h1")) {
+        if (ch.classList.contains("slot") && plainText(ch)) {
+          var szh1 = 0.74;
+          pptxSlotFrame(slide, pres, x0, y, w0, szh1, isLight);
+          slide.addText(plainText(ch), { x: x0 + 0.1, y: y + 0.05, w: w0 - 0.2, h: szh1, fontSize: 22, bold: true, color: colors.txt, valign: "top", margin: 0 });
+          y += szh1 + 0.2;
+        } else {
+          slide.addText(plainText(ch), { x: x0, y: y, w: w0, h: 0.72, fontSize: 22, bold: true, color: colors.txt, valign: "top", margin: 0 });
+          y += 0.76;
+        }
+        continue;
+      }
+      if (ch.matches("h2")) {
+        if (ch.classList.contains("slot") && plainText(ch)) {
+          var szh2 = 0.5;
+          pptxSlotFrame(slide, pres, x0, y, w0, szh2, isLight);
+          slide.addText(plainText(ch), { x: x0 + 0.1, y: y + 0.05, w: w0 - 0.2, h: szh2, fontSize: 14, color: colors.mut, valign: "top", margin: 0 });
+          y += szh2 + 0.2;
+        } else {
+          slide.addText(plainText(ch), { x: x0, y: y, w: w0, h: 0.48, fontSize: 14, color: colors.mut, valign: "top", margin: 0 });
+          y += 0.52;
+        }
+        continue;
+      }
+      if (ch.matches("h3") && !ch.closest(".compare-col")) {
+        slide.addText(plainText(ch), { x: x0, y: y, w: w0, h: 0.38, fontSize: 11, bold: true, color: colors.txt, valign: "top", margin: 0 });
+        y += 0.42;
+        continue;
+      }
+      if (ch.matches("p.hero-stat-label")) {
+        slide.addText(plainText(ch), { x: x0, y: y, w: w0, h: 0.32, fontSize: 10, color: colors.mut, valign: "top", margin: 0 });
+        y += 0.36;
+        continue;
+      }
+      if (ch.matches("p.hero-stat")) {
+        var fs = w0 < 4.5 ? 28 : 36;
+        slide.addText(plainText(ch), { x: x0, y: y, w: w0, h: 0.62, fontSize: fs, bold: true, color: "EF4444", valign: "top", margin: 0 });
+        y += 0.68;
+        continue;
+      }
+      if (ch.matches("p") && (ch.classList.contains("muted") || ch.classList.contains("hint"))) {
+        slide.addText(plainText(ch), {
+          x: x0,
+          y: y,
+          w: w0,
+          h: 0.32,
+          fontSize: 9,
+          color: ch.classList.contains("hint") ? "F87171" : colors.mut,
+          valign: "top",
+          margin: 0
+        });
+        y += 0.36;
+        continue;
+      }
+      if ((ch.matches("div.slot") || (ch.matches("p") && ch.classList.contains("slot"))) && plainText(ch)) {
+        var st = plainText(ch);
+        var estH = Math.min(2.1, 0.32 + Math.ceil(st.length / Math.max(42, Math.floor(w0 * 11))) * 0.28);
+        var tx = x0 + 0.1;
+        var tw = w0 - 0.2;
+        pptxSlotFrame(slide, pres, x0, y, w0, estH, isLight);
+        slide.addText(st, { x: tx, y: y + 0.05, w: tw, h: estH, fontSize: 10, color: colors.txt, valign: "top", margin: 0 });
+        y += estH + 0.2;
+        continue;
+      }
+      if (ch.classList && ch.classList.contains("kpi-zone")) {
+        var fk = plainText(ch);
+        if (fk) {
+          var estK = Math.min(2.5, 0.32 + fk.split("\n").length * 0.2);
+          pptxSlotFrame(slide, pres, x0, y, w0, estK, isLight);
+          slide.addText(fk, { x: x0 + 0.1, y: y + 0.05, w: w0 - 0.2, h: estK, fontSize: 9, color: colors.txt, valign: "top", margin: 0 });
+          y += estK + 0.16;
+        }
+        continue;
+      }
+      if (ch.matches("p") && !ch.classList.contains("slot")) {
+        var pt = plainText(ch);
+        if (pt) {
+          slide.addText(pt, { x: x0, y: y, w: w0, h: 0.44, fontSize: 10, color: colors.txt, valign: "top", margin: 0 });
+          y += 0.48;
+        }
+        continue;
+      }
+      if (ch.tagName === "DIV" && !ch.classList.contains("slot") && !ch.classList.contains("rich-html") && !ch.classList.contains("layout-split") && !ch.classList.contains("layout-stack")) {
+        var nested = plainText(ch);
+        if (nested.length > 3 && !ch.querySelector(".layout-split, .layout-stack, .rich-html")) {
+          var estD = Math.min(2.2, 0.35 + nested.split("\n").length * 0.18);
+          slide.addText(nested, { x: x0, y: y, w: w0, h: estD, fontSize: 10, color: colors.txt, valign: "top", margin: 0 });
+          y += estD + 0.08;
+        }
+      }
+    }
+    return y;
+  }
+  function pptxCtor() {
+    var g = typeof window !== "undefined" ? window : {};
+    if (typeof g.PptxGenJS === "function") return g.PptxGenJS;
+    if (typeof g.pptxgen === "function") return g.pptxgen;
+    return null;
+  }
+  function jspdfCtor() {
+    if (window.jspdf && window.jspdf.jsPDF) return window.jspdf.jsPDF;
+    return null;
+  }
+  async function rasterizeSlide(el, i, total) {
+    setProgress("A capturar slide " + (i + 1) + " / " + total + "…");
+    if (typeof html2canvas !== "function") {
+      throw new Error("html2canvas nao carregou (rede / CDN).");
+    }
+    await document.fonts.ready;
+    var canvas = await html2canvas(el, {
+      scale: 2,
+      useCORS: true,
+      allowTaint: false,
+      logging: false,
+      backgroundColor: null,
+      scrollX: 0,
+      scrollY: -window.scrollY
+    });
+    return canvas;
+  }
+  function jpegDataUrlFromCanvas(canvas, quality) {
+    return canvas.toDataURL("image/jpeg", quality || 0.9);
+  }
+
+  /**
+   * PPTX editavel: mapeia o DOM do slide para texto, tabelas e SVG (logo WebP -> PNG).
+   */
+  async function addEditableSlideFromDom(pres, section) {
+    var isLight = section.classList.contains("slide--light");
+    var slide = pres.addSlide();
+    var M = 0.45;
+    var bg = isLight ? "F4F4F5" : "141414";
+    var colors = {
+      txt: isLight ? "0A0A0A" : "F5F5F5",
+      mut: isLight ? "525252" : "A8A8A8",
+      acc: "EF4444"
+    };
+    slide.addShape(pres.shapes.RECTANGLE, {
+      x: 0,
+      y: 0,
+      w: 10,
+      h: 5.625,
+      fill: { color: bg },
+      line: { color: bg, width: 0.25 }
+    });
+    var logo = section.querySelector("img.slide-logo");
+    if (logo && logo.src && /^data:image\//i.test(logo.src)) {
+      try {
+        var logoPng = await dataUrlToPngForPptx(logo.src);
+        var logoImg = new Image();
+        await new Promise(function (res, rej) {
+          logoImg.onload = res;
+          logoImg.onerror = rej;
+          logoImg.src = logoPng;
+        });
+        var nw = logoImg.naturalWidth || 120;
+        var nh = logoImg.naturalHeight || 36;
+        var arL = nw / Math.max(1, nh);
+        var maxLogoW = 1.25;
+        var maxLogoH = 0.48;
+        var lw = maxLogoW;
+        var lh = lw / arL;
+        if (lh > maxLogoH) {
+          lh = maxLogoH;
+          lw = lh * arL;
+        }
+        var marginBr = 0.38;
+        var lx = 10 - marginBr - lw;
+        var ly = 5.625 - marginBr - lh;
+        slide.addImage({ data: logoPng, x: lx, y: ly, w: lw, h: lh });
+      } catch (logoErr) {
+        console.warn("Logo PPTX", logoErr);
+      }
+    }
+    var y = 0.42;
+
+    function addUlCompact(ul) {
+      var lis = ul.querySelectorAll(":scope > li");
+      if (!lis.length) return;
+      var parts = [];
+      for (var u = 0; u < lis.length; u++) {
+        parts.push({
+          text: plainText(lis[u]),
+          options: { bullet: true, breakLine: u < lis.length - 1, fontSize: 10, color: colors.txt }
+        });
+      }
+      var uh = Math.min(2.5, 0.28 + lis.length * 0.3);
+      slide.addText(parts, { x: M, y: y, w: 8.9, h: uh, fontSize: 10, color: colors.txt, valign: "top", margin: 0 });
+      y += uh + 0.1;
+    }
+
+    var kids = Array.from(section.children);
+    for (var ki = 0; ki < kids.length; ki++) {
+      var node = kids[ki];
+      if (node.tagName === "IMG" && node.classList.contains("slide-logo")) continue;
+
+      if (node.classList && node.classList.contains("accent-bar")) {
+        slide.addShape(pres.shapes.RECTANGLE, {
+          x: M,
+          y: y,
+          w: 1.12,
+          h: 0.05,
+          fill: { color: "DC2626" },
+          line: { color: "DC2626", width: 0.25 }
+        });
+        y += 0.18;
+        continue;
+      }
+      if (node.classList && node.classList.contains("slide-label")) {
+        slide.addText(plainText(node), {
+          x: M,
+          y: y,
+          w: 9,
+          h: 0.34,
+          fontSize: 9,
+          color: colors.acc,
+          bold: true,
+          valign: "top",
+          margin: 0
+        });
+        y += 0.4;
+        continue;
+      }
+      if (node.classList && node.classList.contains("layout-split")) {
+        var colNodes = Array.from(node.children).filter(function (c) {
+          return c.nodeType === 1;
+        });
+        var ncols = colNodes.length || 1;
+        var innerW = 9;
+        var gap = 0.28;
+        var colW = (innerW - gap * Math.max(0, ncols - 1)) / ncols;
+        var yStart = y;
+        var maxY = y;
+        for (var lix = 0; lix < colNodes.length; lix++) {
+          var cx = M + lix * (colW + gap);
+          var yEnd = await pptxWalkColumn(slide, pres, colNodes[lix], cx, colW, yStart, colors, isLight);
+          maxY = Math.max(maxY, yEnd);
+        }
+        y = maxY + 0.12;
+        continue;
+      }
+      if (node.classList && node.classList.contains("rich-html")) {
+        y = await appendRichHtmlToPptx(slide, node, y, colors, isLight, { x: M, w: 9 }, pres);
+        continue;
+      }
+      if (node.classList && node.classList.contains("pillars")) {
+        var cols = node.querySelectorAll(":scope > .pillar");
+        var pw = 2.78;
+        var gap = 0.28;
+        for (var pi = 0; pi < cols.length; pi++) {
+          var col = cols[pi];
+          var px = M + pi * (pw + gap);
+          var lines = [];
+          var h3 = col.querySelector(".pillar-body h3, h3");
+          var pp = col.querySelector(".pillar-body p, p");
+          if (h3) lines.push({ text: plainText(h3), options: { bold: true, fontSize: 10, color: colors.acc, breakLine: !!pp } });
+          if (pp) lines.push({ text: plainText(pp), options: { fontSize: 9, color: colors.mut } });
+          if (lines.length) {
+            var ph = 1.32;
+            pptxSlotFrame(slide, pres, px, y, pw, ph, isLight);
+            slide.addText(lines, { x: px + 0.08, y: y + 0.06, w: pw - 0.16, h: ph - 0.1, fontSize: 10, color: colors.txt, valign: "top", margin: 0 });
+          }
+        }
+        y += 1.42;
+        continue;
+      }
+      if (node.classList && node.classList.contains("compare")) {
+        var cols2 = node.querySelectorAll(":scope > .compare-col");
+        var cw = 4.32;
+        var cg = 0.32;
+        for (var ci = 0; ci < cols2.length; ci++) {
+          var cx = M + ci * (cw + cg);
+          var ccol = cols2[ci];
+          var lines2 = [];
+          var h3b = ccol.querySelector("h3");
+          var pb = ccol.querySelector("p");
+          if (h3b) lines2.push({ text: plainText(h3b), options: { bold: true, fontSize: 10, color: colors.mut, breakLine: !!pb } });
+          if (pb) lines2.push({ text: plainText(pb), options: { fontSize: 10, color: colors.txt } });
+          if (lines2.length) {
+            var ch2 = 1.48;
+            pptxSlotFrame(slide, pres, cx, y, cw, ch2, isLight);
+            slide.addText(lines2, { x: cx + 0.08, y: y + 0.06, w: cw - 0.16, h: ch2 - 0.12, fontSize: 10, color: colors.txt, valign: "top", margin: 0 });
+          }
+        }
+        y += 1.58;
+        continue;
+      }
+      if (node.tagName === "DIV" && (node.getAttribute("style") || "").indexOf("grid-template-columns") !== -1 && node.querySelector(".slot")) {
+        var colEls = node.querySelectorAll(":scope > div");
+        var colW = 4.22;
+        var colGap = 0.36;
+        var maxDy = 0;
+        for (var gi = 0; gi < colEls.length; gi++) {
+          var gcol = colEls[gi];
+          var gx = M + gi * (colW + colGap);
+          var subY = y;
+          var gch = Array.from(gcol.children);
+          for (var gj = 0; gj < gch.length; gj++) {
+            var sub = gch[gj];
+            var gt = plainText(sub);
+            if (!gt) continue;
+            if (sub.matches("p")) {
+              slide.addText(gt, { x: gx, y: subY, w: colW, h: 0.32, fontSize: 9, color: colors.mut, valign: "top", margin: 0 });
+              subY += 0.36;
+            } else {
+              slide.addText(gt, { x: gx, y: subY, w: colW, h: 1.05, fontSize: 10, color: colors.txt, valign: "top", margin: 0 });
+              subY += 1.1;
+            }
+          }
+          maxDy = Math.max(maxDy, subY - y);
+        }
+        y += maxDy + 0.12;
+        continue;
+      }
+      if (
+        node.tagName === "DIV" &&
+        node.childElementCount === 1 &&
+        node.firstElementChild &&
+        node.firstElementChild.matches &&
+        node.firstElementChild.matches("ul.compact")
+      ) {
+        addUlCompact(node.firstElementChild);
+        continue;
+      }
+      if (node.matches("h1")) {
+        var h1h = 0.82;
+        if (node.classList.contains("slot")) {
+          pptxSlotFrame(slide, pres, M, y, 9, h1h, isLight);
+          slide.addText(plainText(node), { x: M + 0.1, y: y + 0.05, w: 8.8, h: h1h, fontSize: 26, bold: true, color: colors.txt, valign: "top", margin: 0 });
+          y += h1h + 0.2;
+        } else {
+          slide.addText(plainText(node), { x: M, y: y, w: 9, h: h1h, fontSize: 26, bold: true, color: colors.txt, valign: "top", margin: 0 });
+          y += 0.88;
+        }
+        continue;
+      }
+      if (node.matches("h2")) {
+        var h2h = 0.52;
+        if (node.classList.contains("slot")) {
+          pptxSlotFrame(slide, pres, M, y, 9, h2h, isLight);
+          slide.addText(plainText(node), { x: M + 0.1, y: y + 0.05, w: 8.8, h: h2h, fontSize: 15, color: colors.mut, valign: "top", margin: 0 });
+          y += h2h + 0.2;
+        } else {
+          slide.addText(plainText(node), { x: M, y: y, w: 9, h: h2h, fontSize: 15, color: colors.mut, valign: "top", margin: 0 });
+          y += 0.56;
+        }
+        continue;
+      }
+      if (node.matches("h3") && !node.closest(".pillar") && !node.closest(".compare-col")) {
+        slide.addText(plainText(node), { x: M, y: y, w: 9, h: 0.4, fontSize: 12, bold: true, color: colors.txt, valign: "top", margin: 0 });
+        y += 0.44;
+        continue;
+      }
+      if (node.matches("p.hero-stat-label")) {
+        slide.addText(plainText(node), { x: M, y: y, w: 9, h: 0.34, fontSize: 11, color: colors.mut, valign: "top", margin: 0 });
+        y += 0.38;
+        continue;
+      }
+      if (node.matches("p.hero-stat")) {
+        slide.addText(plainText(node), { x: M, y: y, w: 9, h: 0.72, fontSize: 40, bold: true, color: "EF4444", valign: "top", margin: 0 });
+        y += 0.78;
+        continue;
+      }
+      if (node.matches("p") && (node.classList.contains("muted") || node.classList.contains("hint"))) {
+        slide.addText(plainText(node), {
+          x: M,
+          y: y,
+          w: 9,
+          h: 0.34,
+          fontSize: 9,
+          color: node.classList.contains("hint") ? "F87171" : colors.mut,
+          valign: "top",
+          margin: 0
+        });
+        y += 0.38;
+        continue;
+      }
+      if (node.matches("ul.compact")) {
+        addUlCompact(node);
+        continue;
+      }
+      if ((node.matches("div.slot") || (node.matches("p") && node.classList.contains("slot"))) && plainText(node)) {
+        var st = plainText(node);
+        var estH = Math.min(2.2, 0.34 + Math.ceil(st.length / 105) * 0.3);
+        pptxSlotFrame(slide, pres, M, y, 9, estH, isLight);
+        slide.addText(st, { x: M + 0.1, y: y + 0.05, w: 8.8, h: estH, fontSize: 11, color: colors.txt, valign: "top", margin: 0 });
+        y += estH + 0.22;
+        continue;
+      }
+      if (node.classList && node.classList.contains("free-html")) {
+        y = await appendRichHtmlToPptx(slide, node, y, colors, isLight, { x: M, w: 9 }, pres);
+        continue;
+      }
+      if (node.classList && node.classList.contains("kpi-zone")) {
+        var fk = plainText(node);
+        if (fk) {
+          var estK = Math.min(2.8, 0.35 + fk.split("\n").length * 0.22);
+          pptxSlotFrame(slide, pres, M, y, 9, estK, isLight);
+          slide.addText(fk, { x: M + 0.1, y: y + 0.05, w: 8.8, h: estK, fontSize: 10, color: colors.txt, valign: "top", margin: 0 });
+          y += estK + 0.18;
+        }
+        continue;
+      }
+      if (node.matches("p") && !node.classList.contains("slot")) {
+        var pt = plainText(node);
+        if (pt) {
+          slide.addText(pt, { x: M, y: y, w: 9, h: 0.48, fontSize: 10, color: colors.txt, valign: "top", margin: 0 });
+          y += 0.52;
+        }
+        continue;
+      }
+      if (node.tagName === "DIV" && !node.classList.contains("pillars") && !node.classList.contains("compare") && !node.classList.contains("slot") && !node.classList.contains("free-html") && !node.classList.contains("kpi-zone") && !node.classList.contains("rich-html") && !node.classList.contains("layout-split") && !node.classList.contains("layout-stack")) {
+        if (node.querySelector("ul.compact") || node.querySelector(".pillar")) continue;
+        var nested = plainText(node);
+        if (nested.length > 3) {
+          var estD = Math.min(2.5, 0.42 + nested.split("\n").length * 0.2);
+          slide.addText(nested, { x: M, y: y, w: 9, h: estD, fontSize: 10, color: colors.txt, valign: "top", margin: 0 });
+          y += estD + 0.1;
+        }
+      }
+    }
+  }
+
+  btnPdf.addEventListener("click", async function () {
+    var JsPDF = jspdfCtor();
+    if (!JsPDF) {
+      window.alert("jsPDF nao carregou. Verifique a rede e tente de novo.");
+      return;
+    }
+    var slides = document.querySelectorAll(".deck > section.slide");
+    if (!slides.length) {
+      window.alert("Nenhum slide encontrado.");
+      return;
+    }
+    setBusy(true);
+    setProgress("");
+    try {
+      var pdf = null;
+      for (var i = 0; i < slides.length; i++) {
+        var canvas = await rasterizeSlide(slides[i], i, slides.length);
+        var imgData = jpegDataUrlFromCanvas(canvas, 0.88);
+        var w = canvas.width;
+        var h = canvas.height;
+        if (i === 0) {
+          pdf = new JsPDF({
+            orientation: w >= h ? "landscape" : "portrait",
+            unit: "px",
+            format: [w, h],
+            hotfixes: ["px_scaling"]
+          });
+        } else {
+          pdf.addPage([w, h], w >= h ? "landscape" : "portrait");
+        }
+        pdf.addImage(imgData, "JPEG", 0, 0, w, h, undefined, "FAST");
+      }
+      pdf.save(safeFilename(document.title) + ".pdf");
+      setProgress("PDF gerado.");
+    } catch (err) {
+      console.error(err);
+      window.alert("Erro ao gerar PDF: " + (err && err.message ? err.message : err));
+      setProgress("");
+    } finally {
+      setBusy(false);
+      setTimeout(function () { setProgress(""); }, 4000);
+    }
+  });
+
+  btnPptx.addEventListener("click", async function () {
+    var Ctor = pptxCtor();
+    if (!Ctor) {
+      window.alert("PptxGenJS nao carregou. Verifique a rede. Skill de referencia: pptx/pptxgenjs.md");
+      return;
+    }
+    var slides = document.querySelectorAll(".deck > section.slide");
+    if (!slides.length) {
+      window.alert("Nenhum slide encontrado.");
+      return;
+    }
+    setBusy(true);
+    setProgress("");
+    try {
+      var pres = new Ctor();
+      pres.layout = "LAYOUT_16x9";
+      pres.title = document.title || "Deck";
+      for (var e = 0; e < slides.length; e++) {
+        setProgress("PPTX editável: slide " + (e + 1) + " / " + slides.length + "…");
+        await addEditableSlideFromDom(pres, slides[e]);
+      }
+      await pres.writeFile({ fileName: safeFilename(document.title) + ".pptx" });
+      setProgress("PPTX editável gerado.");
+    } catch (err2) {
+      console.error(err2);
+      window.alert("Erro ao gerar PPTX editável: " + (err2 && err2.message ? err2.message : err2));
+      setProgress("");
+    } finally {
+      setBusy(false);
+      setTimeout(function () { setProgress(""); }, 4000);
+    }
+  });
+
+  if (btnPptxRaster) {
+    btnPptxRaster.addEventListener("click", async function () {
+      var Ctor = pptxCtor();
+      if (!Ctor) {
+        window.alert("PptxGenJS nao carregou. Verifique a rede.");
+        return;
+      }
+      var slidesR = document.querySelectorAll(".deck > section.slide");
+      if (!slidesR.length) {
+        window.alert("Nenhum slide encontrado.");
+        return;
+      }
+      setBusy(true);
+      setProgress("");
+      try {
+        var presR = new Ctor();
+        presR.layout = "LAYOUT_16x9";
+        presR.title = document.title || "Deck";
+        var Wr = 10;
+        var Hr = 5.625;
+        for (var j = 0; j < slidesR.length; j++) {
+          var canvas2 = await rasterizeSlide(slidesR[j], j, slidesR.length);
+          var dataUrl = jpegDataUrlFromCanvas(canvas2, 0.88);
+          var s = presR.addSlide();
+          s.addImage({ data: dataUrl, x: 0, y: 0, w: Wr, h: Hr });
+        }
+        await presR.writeFile({ fileName: safeFilename(document.title) + "_imagem.pptx" });
+        setProgress("PPTX imagem gerado.");
+      } catch (err3) {
+        console.error(err3);
+        window.alert("Erro ao gerar PPTX imagem: " + (err3 && err3.message ? err3.message : err3));
+        setProgress("");
+      } finally {
+        setBusy(false);
+        setTimeout(function () { setProgress(""); }, 4000);
+      }
+    });
+  }
+
+  if (btnPrint) {
+    btnPrint.addEventListener("click", function () {
+      window.print();
+    });
+  }
+})();
+  </script>
+</body>
+</html>

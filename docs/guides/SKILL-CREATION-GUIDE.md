@@ -1,12 +1,83 @@
 # Guia Completo de Criacao de Skills para IA
 **Proposito**: Ensinar como criar, instalar e manter Skills reutilizaveis para agentes de IA (Claude, Cursor, etc.)
-**Ultima Atualizacao:** 2026-04-11
+**Ultima Atualizacao:** 2026-04-13
 
 > **Documentos relacionados:**
 > - `docs/06-SKILL-IDENTIDADE-VISUAL.md` — Skill de referencia de identidade visual do projeto
 > - `docs/references/SKILL-EXAMPLES.md` — Exemplos concretos de skills prontas
 > - `docs/templates/SKILL-TEMPLATE.md` — Template em branco para criar sua skill
 > - `docs/templates/PROMPT-CREATE-SKILL.md` — Prompts estruturados para gerar skills com o Claude
+> - `*/skills/sabatina-prd/` — Sabatina estruturada (espelhado em `.claude`, `.cursor`, `.agents`, `.codex`)
+> - `*/skills/relatorio-deck-html/` — Exemplo semi-deterministico (HTML + JSON + script)
+
+---
+
+## Como derivar uma skill (alem do metodo classico)
+
+Alem de “reunir materiais e pedir para a IA gerar” (fluxo abaixo), duas origens comuns neste starter sao a **sabatina** e a **leitura de entregas ja feitas**. Em ambos os casos o objetivo e transformar **informacao ja estruturada ou semi-estruturada** em **instrucoes operacionais** que o agente repete com consistencia.
+
+### Origem 1: A partir de uma sabatina
+
+**Quando usar:** voce ainda nao tem skill escrita, mas ja conduz (ou vai conduzir) uma conversa de esclarecimento com perguntas e respostas — antes de codar ou antes de consolidar um PRD.
+
+**Passos:**
+
+1. Execute a skill **`sabatina-prd`** em `*/skills/` (ou equivalente) ate obter um **PRD** ou conjunto de decisoes claras.
+2. **Extraia invariantes** — o que deve valer em toda sessao futura, nao so neste projeto:
+   - criterios de aceitacao que se repetem;
+   - “nunca fazer X” que apareceu na conversa;
+   - formato de saida desejado (checklist, secoes obrigatorias, tom).
+3. **Separe** o que e **contexto do projeto** (vai para `docs/` ou PRD) do que e **procedimento do agente** (vai para a skill).
+4. Monte o `SKILL.md` com:
+   - `description` rica em **palavras-gatilho** que lembrem o dominio (ex.: “apos sabatina”, “PRD”, “deck”, “relatorio”).
+   - secao **Fluxo obrigatorio** espelhando a ordem da sabatina que funcionou.
+   - **Anti-padroes** tirados das correcoes que o usuario fez durante a conversa.
+5. Se a sabatina produzir **dados estruturados** (titulos, bullets, decisao skill vs UI), considere um **segundo artefato** gerado por script — ver skill exemplo **`relatorio-deck-html`** (template + `fill-deck.mjs` **dentro da pasta da skill** + JSON).
+
+**Armadilha:** copiar o PRD inteiro para dentro da skill. Isso **infla** a skill e mistura “o que” (produto) com “como o agente deve proceder”. Skill deve ficar **enxuta**; detalhe de produto permanece em `plans/` ou `docs/`.
+
+### Origem 2: A partir de leitura de entregas ja feitas
+
+**Quando usar:** existe codigo, PRDs, ADRs, issues ou documentos que ja refletem um padrao maduro; voce quer **codificar** esse padrao para o agente nao reinventar.
+
+**Fontes tipicas:**
+
+| Fonte | O que extrair para a skill |
+|-------|----------------------------|
+| `plans/in-progress/*.md` | Escopo, definicoes, criterios que devem se repetir |
+| `docs/05-ARCHITECTURE-DECISIONS.md` | Decisoes ativas, formatos de ADR, hipoteses |
+| `docs/prd/`, `docs/specs/` | Regras de dominio estaveis (nao copiar o doc todo) |
+| Pastas de codigo (`app/`, etc.) | Padroes concretos: naming, estrutura de pastas, hooks |
+| PRs / revisoes (texto no repo) | Checklist de review, o que bloqueia merge |
+
+**Passos:**
+
+1. **Inventariar** 2–5 arquivos “fonte da verdade” (o usuario pode indicar).
+2. Para cada fonte, listar **padroes observados** (bullet) — nao inferir sem evidencia no texto ou no codigo.
+3. Agrupar em: **sempre fazer**, **nunca fazer**, **quando X entao Y**.
+4. Escrever `SKILL.md` com exemplos **minimos** (code snippets) tirados do proprio repo (referencia de caminho).
+5. **Validar** com 3 tarefas reais; ajustar descricao (gatilhos) se a skill nao ativar.
+
+**Armadilha:** skill baseada so em **um** PRD antigo sem checar se o time ainda segue aquele padrao. Preferir ADR **ativa** ou codigo atual.
+
+### Semi-deterministico: relatorio em HTML (exemplo completo)
+
+Este repo inclui uma skill que combina **parte fixa** (template + JSON + script Node) com **parte livre** (HTML escrito pelo agente em slides em branco):
+
+- Skill: **`relatorio-deck-html/`** (qualquer pasta `*/skills/` espelhada)
+- Template, script e exemplos: **`relatorio-deck-html/assets/`**, **`scripts/`**, **`examples/`** (colocalizados com o `SKILL.md`, como nas skills `pptx`/`docx`)
+
+Uso pedagogico: mostrar como uma skill pode **orquestrar** geracao de artefatos (preencher `%%PLACEHOLDERS%%`) sem ser 100% texto livre. Ver tambem `docs/references/SKILL-EXAMPLES.md` (exemplo 4).
+
+### Espelhar no repositorio (apos criar ou alterar uma skill)
+
+Neste starter a **fonte unica** e **`.claude/skills/<nome>/`**. Cursor, Codex e a pasta `.agents` usam **copias identicas** geradas por script.
+
+1. Garanta que a skill nova ou alterada esta em **`.claude/skills/`** (minimo `SKILL.md` na pasta da skill).
+2. Na raiz do repo: **`bash scripts/sync-skills.sh`** (opcional: `--dry-run` antes, `--help` para o checklist).
+3. Inclua no commit **`.claude/skills/`** e as tres pastas espelhadas (`.cursor/skills/`, `.agents/skills/`, `.codex/skills/`) para ficarem alinhadas.
+
+Nao edite os espelhos à mao — o proximo `sync-skills.sh` sobrescreve.
 
 ---
 
@@ -51,7 +122,9 @@ Crie uma Skill quando voce perceber que esta repetindo as mesmas instrucoes para
 
 ## Processo Passo a Passo
 
-### Passo 1: Reunir Materiais
+### Passo 1: Reunir Materiais (ou escolher origem)
+
+Se ainda **nao** tiver materiais estáticos, defina a **origem**: sabatina (Origem 1), entregas existentes (Origem 2), ou materiais tradicionais abaixo.
 
 Antes de pedir para a IA gerar a skill, reuna tudo que define o padrao:
 

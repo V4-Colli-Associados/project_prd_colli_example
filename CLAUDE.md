@@ -55,5 +55,5 @@ cd app && npm run build && npm run lint
 
 ## Skills: ferramenta vs metodologia
 
-- **Skills nativas (Claude Code):** diretorio `.claude/skills/<nome>/SKILL.md` — ver `docs/08-AI-TOOL-CONFIG.md`
+- **Skills (fonte `.claude/skills/`; espelhos `.cursor` / `.agents` / `.codex`):** `<nome>/SKILL.md` — apos criar ou alterar, `bash scripts/sync-skills.sh` (`--help`). Ver `docs/08-AI-TOOL-CONFIG.md`
 - **Guias longos / metodologia:** `docs/guides/`, `docs/templates/`, `docs/references/`

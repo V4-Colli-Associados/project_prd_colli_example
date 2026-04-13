@@ -1,4 +1,5 @@
 temp/
+**/relatorio-deck-html/dist/
 # Preferencias locais Claude Code (nao commitar)
 CLAUDE.local.md
 

@@ -48,40 +48,83 @@ O nome padrao e **`AGENTS.md`** (com S), nao `AGENT.md`.
 
 Padrao comum: **um diretorio por skill** com **`SKILL.md`** obrigatorio na raiz desse diretorio; opcionais: `scripts/`, `references/`, `assets/`.
 
-Exemplo:
+**Neste starter**, as skills padrao estao **espelhadas em quatro pastas com o mesmo conteudo**:
 
 ```text
-.claude/skills/minha-skill/SKILL.md
-.cursor/skills/minha-skill/SKILL.md
+.claude/skills/<nome>/SKILL.md
+.cursor/skills/<nome>/SKILL.md
+.agents/skills/<nome>/SKILL.md
+.codex/skills/<nome>/SKILL.md
 ```
+
+### Espelho de skills (`sync-skills.sh`)
+
+| Papel | Caminho |
+|-------|---------|
+| **Fonte (Claude)** | `.claude/skills/` — unico sitio onde se cria ou edita skills no repo |
+| **Espelhos** | `.cursor/skills/`, `.agents/skills/`, `.codex/skills/` |
+
+O script **`scripts/sync-skills.sh`** copia **toda** a arvore `.claude/skills/` para cada espelho (apaga conteudo anterior do espelho e recopia). Isto garante que Claude Code, Cursor, Codex e variante `.agents` veem o **mesmo** conjunto de skills.
+
+**Quando executar (obrigatorio):**
+
+1. Apos **adicionar** uma nova pasta `.claude/skills/<nome>/` (minimo: `SKILL.md`).
+2. Apos **alterar** qualquer ficheiro sob `.claude/skills/` (inclui `scripts/`, `assets/`, `references/` dentro de cada skill).
+3. Apos **remover ou renomear** uma skill na fonte.
+4. **Antes de commitar** mudancas relacionadas a skills, para o PR incluir fonte + tres espelhos alinhados.
+
+```bash
+bash scripts/sync-skills.sh
+bash scripts/sync-skills.sh --dry-run   # opcional: inspecionar sem escrever
+bash scripts/sync-skills.sh --help
+```
+
+**Nao** editar os espelhos diretamente — serao sobrescritos. **Nao** usar o script para copiar do espelho de volta para `.claude/`.
+
+### Scripts partilhados (`scripts/skill-tools/`)
+
+Logica de geracao que **nao** precisa ser duplicada em cada pasta `.claude/skills/<nome>/scripts/` deve viver na raiz do repo em **`scripts/skill-tools/`** (esta pasta **nao** e copiada pelo `sync-skills.sh`).
+
+| Ficheiro | Uso |
+|----------|-----|
+| `skill-tools/deck-fill.mjs` | Preenche `relatorio-deck-html` (e futuros templates semelhantes) a partir de JSON. |
+| `skill-tools/README.md` | Convencoes e como adicionar novas ferramentas. |
+
+Cada skill expoe um **wrapper** curto (ex. `node scripts/fill-deck.mjs`) que delega para o motor central — assim o espelho continua autocontido para quem navega a skill, mas a fonte de verdade do algoritmo e unica.
 
 **Metodologia vibe coding (texto longo, PRDs, templates)** continua em **`docs/guides/`**, **`docs/templates/`** — isso nao substitui skills nativas; sao camadas diferentes (ver `docs/00-DOC-STANDARDS.md`).
 
 ---
 
-## Pastas criadas neste starter (podem ficar vazias)
+## Pastas de skills neste starter
 
-| Caminho | Uso |
-|---------|-----|
-| `.claude/skills/` | Skills Claude Code (projeto) |
-| `.cursor/rules/` | Regras Cursor (ex.: `*.mdc`) |
-| `.cursor/skills/` | Skills Cursor Agent |
-| `.agents/skills/` | Skills no formato esperado por Codex/Cursor em alguns setups |
+| Caminho | Uso tipico |
+|---------|------------|
+| `.claude/skills/` | Claude Code — **fonte de edicao** no repo |
+| `.cursor/skills/` | Cursor Agent (espelho) |
+| `.agents/skills/` | OpenAI Codex / interop (espelho) |
+| `.codex/skills/` | OpenAI Codex (espelho) |
+| `.cursor/rules/` | Regras Cursor (`*.mdc`), nao confundir com skills |
 
-Cada pasta contem um `README.md` explicando o papel; nao e obrigatorio manter skills versionadas ate voce precisar.
+Cada arvore `*/skills/` inclui `README.md` e as mesmas quatro skills listadas abaixo.
 
-### Skills padrao versionadas (`.claude/skills/`)
+### Skills padrao (identicas nas quatro pastas)
 
 | Skill | Proposito |
 |-------|-----------|
 | `sabatina-prd` | Sabatina com perguntas; PRD completo; entregavel primario skill vs interface |
 | `onboarding-vibe-coding` | Onboarding: conceitos basicos e como comecar |
 | `organizar-temp-repositorio` | Organizar arquivos; mover `.md` descartavel (direcionamento, relatorio de sessao) para `temp/` |
+| `relatorio-deck-html` | Deck em HTML (`assets/`, wrapper `scripts/fill-deck.mjs`, JSON); motor `scripts/skill-tools/deck-fill.mjs`; `.pptx` via barra do HTML ou skill `pptx` |
+| `docx` | Word — skill Anthropic no repo; ver `docs/references/ANTHROPIC-DOCUMENT-SKILLS.md` |
+| `pptx` | PowerPoint — idem |
+| `xlsx` | Excel — idem |
+| `pdf` | PDF — idem |
 
 ---
 
-## Precedencia e duplicacao
+## Precedencia e manutencao
 
-1. **Nao duplique** o mesmo playbook em cinco pastas; escolha a ferramenta principal do time e **link** nos READMEs.
+1. **Skills:** um unico conteudo logico; as quatro pastas devem permanecer **iguais** — apos qualquer mudanca em `.claude/skills/`, rode `bash scripts/sync-skills.sh` (ver secao **Espelho de skills** acima).
 2. **Mantenha `AGENTS.md` e `CLAUDE.md` alinhados** em stack, comandos e links de docs.
 3. Para detalhes de merge e limites de tamanho no Codex, ver [Project instructions discovery](https://developers.openai.com/codex/config-advanced#project-instructions-discovery).

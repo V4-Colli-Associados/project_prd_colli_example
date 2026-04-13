@@ -40,7 +40,7 @@ export const quickStart: Step[] = [
     description: "Contexto na raiz antes de pedir codigo (portatil + Claude Code)",
     details: [
       "Na raiz: AGENTS.md (Codex, Cursor, etc.) e CLAUDE.md (Claude Code) — gemeos; mantenha ambos alinhados.",
-      "Indice curto: stack, convencoes, links para docs/. Detalhes por ferramenta: docs/08-AI-TOOL-CONFIG.md (.claude/skills, .cursor/rules, ...).",
+      "Indice curto: stack, convencoes, links para docs/. Skills espelhadas em .claude/.cursor/.agents/.codex/skills + sync-skills.sh. Ver docs/08-AI-TOOL-CONFIG.md.",
       "Só o app React: use app/CLAUDE.md, que aponta para a raiz.",
     ],
   },
@@ -88,7 +88,7 @@ export const quickStart: Step[] = [
 
 export const directoryStructure: DirectoryItem[] = [
   { path: "AGENTS.md + CLAUDE.md", description: "Instrucoes para agentes na raiz (gemeos); mapa em docs/08", badge: "contexto-ia" },
-  { path: ".claude/ .cursor/ .agents/", description: "Skills e regras nativas das ferramentas (ver docs/08)", badge: "contexto-ia" },
+  { path: ".claude/.cursor/.agents/.codex/skills", description: "Skills espelhadas (sync-skills.sh); .cursor/rules para regras", badge: "contexto-ia" },
   { path: "app/", description: "Codigo-fonte da aplicacao React + Vite + shadcn/ui", badge: "codigo" },
   { path: "docs/", description: "Documentacao permanente — a memoria do projeto", badge: "conhecimento" },
   { path: "docs/00 a 08", description: "Standards, IA, design system, vocabulario, dados, ADRs, skills, agent-first, tool config", badge: "fundamentos" },
@@ -139,7 +139,7 @@ export const toolRoles: ToolRole[] = [
 export const faq: FaqItem[] = [
   {
     question: "Quais skills ja existem no projeto?",
-    answer: "Em .claude/skills/: sabatina-prd (perguntas antes de executar + PRD com decisao skill vs interface), onboarding-vibe-coding (como comecar), organizar-temp-repositorio (mover .md descartavel para temp/). Invocacao depende da ferramenta (ex. /nome no chat). Ver .claude/skills/README.md e docs/08-AI-TOOL-CONFIG.md.",
+    answer: "Quatro pastas espelhadas (ver skills/README.md): starter sabatina-prd, onboarding, organizar-temp, relatorio-deck-html; mais docx, pptx, xlsx, pdf (Anthropic, vendor). sync-skills.sh. docs/references/ANTHROPIC-DOCUMENT-SKILLS.md, docs/08-AI-TOOL-CONFIG.md.",
   },
   {
     question: "Quando faco uma skill e quando faco uma tela no app?",
