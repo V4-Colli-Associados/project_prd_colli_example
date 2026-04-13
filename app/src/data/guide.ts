@@ -1,0 +1,156 @@
+export interface Step {
+  number: string;
+  title: string;
+  description: string;
+  details: string[];
+}
+
+export interface DirectoryItem {
+  path: string;
+  description: string;
+  badge?: string;
+}
+
+export interface ToolRole {
+  name: string;
+  role: string;
+  when: string;
+  examples: string[];
+}
+
+export interface FaqItem {
+  question: string;
+  answer: string;
+}
+
+export const quickStart: Step[] = [
+  {
+    number: "01",
+    title: "Leia os docs/",
+    description: "Entenda as regras do jogo antes de jogar",
+    details: [
+      "Comece por docs/00-DOC-STANDARDS.md para entender como a documentacao funciona.",
+      "Leia docs/02-DESIGN-SYSTEM.md para conhecer os tokens visuais (cores, fontes, espacamento).",
+      "Revise docs/05-ARCHITECTURE-DECISIONS.md para entender as decisoes ja tomadas e as hipoteses ativas.",
+    ],
+  },
+  {
+    number: "02",
+    title: "Configure o CLAUDE.md",
+    description: "De contexto para a IA antes de pedir codigo",
+    details: [
+      "O arquivo CLAUDE.md na raiz e o ponto de entrada para agentes de IA.",
+      "Ele deve ter ~100 linhas: stack, convencoes, links para docs/. Funciona como indice, nao enciclopedia.",
+      "Quanto mais explicito, melhor o codigo gerado. Inclua: o que nunca fazer, bibliotecas permitidas, padroes de nomenclatura.",
+    ],
+  },
+  {
+    number: "03",
+    title: "Escreva a spec antes do codigo",
+    description: "PRD e user stories primeiro, implementacao depois",
+    details: [
+      "Crie o PRD em docs/prd/ — defina O QUE construir, PARA QUEM e POR QUE.",
+      "Escreva user stories com criterios de aceitacao em docs/specs/.",
+      "Registre decisoes tecnicas como ADRs em docs/05-ARCHITECTURE-DECISIONS.md.",
+    ],
+  },
+  {
+    number: "04",
+    title: "Comece a codar",
+    description: "Agora sim, com contexto claro, peca codigo ao agente",
+    details: [
+      "Use o Cursor para gerar e editar codigo. Os prompts serao muito melhores com docs/ preenchidos.",
+      "Dados iniciais ficam em src/data/ como JSON/TypeScript. Migre para Supabase quando tiver credenciais.",
+      "Componentes ficam em src/components/. Use shadcn/ui como base e customize conforme o design system.",
+    ],
+  },
+  {
+    number: "05",
+    title: "Registre o que aprendeu",
+    description: "Decisoes, hipoteses e vocabulario voltam para os docs",
+    details: [
+      "Decisao importante? Crie uma ADR com status ATIVA.",
+      "Aposta nao validada? Adicione ao Hypothesis Tracker.",
+      "Termo novo no projeto? Adicione ao docs/03-VOCABULARY.md com 'Nao confundir com'.",
+    ],
+  },
+];
+
+export const directoryStructure: DirectoryItem[] = [
+  { path: "app/", description: "Codigo-fonte da aplicacao React + Vite + shadcn/ui", badge: "codigo" },
+  { path: "docs/", description: "Documentacao permanente — a memoria do projeto", badge: "conhecimento" },
+  { path: "docs/00 a 07", description: "Standards, IA, design system, vocabulario, dados, ADRs, skills, agent-first", badge: "fundamentos" },
+  { path: "docs/guides/", description: "Skills e instrucoes operacionais reutilizaveis", badge: "como fazer" },
+  { path: "docs/references/", description: "Exemplos concretos e materiais de referencia", badge: "exemplos" },
+  { path: "docs/templates/", description: "Templates em branco e prompts prontos para usar", badge: "templates" },
+  { path: "plans/", description: "Planejamento de sprints e tracking de trabalho", badge: "operacao" },
+  { path: "scripts/", description: "Automacoes: setup, seed data, deploy", badge: "automacao" },
+  { path: "temp/", description: "Lixo controlado — arquivos temporarios, git-ignored", badge: "descarte" },
+];
+
+export const toolRoles: ToolRole[] = [
+  {
+    name: "Cursor",
+    role: "Execucao",
+    when: "O problema esta definido e precisa virar codigo",
+    examples: [
+      "Crie a estrutura inicial do app",
+      "Adicione autenticacao com Supabase",
+      "Gere CRUD completo da entidade tasks",
+      "Refatore isso para componentes menores",
+    ],
+  },
+  {
+    name: "ChatGPT",
+    role: "Estruturacao",
+    when: "O problema esta mal definido e precisa de clareza",
+    examples: [
+      "Monte o PRD minimo desse produto",
+      "Escreva user stories para o fluxo de login",
+      "Compare Supabase vs Firebase para este caso",
+      "Transforme essa ideia vaga em backlog",
+    ],
+  },
+  {
+    name: "Claude",
+    role: "Aprofundamento",
+    when: "O problema e grande, confuso ou espalhado em muitos arquivos",
+    examples: [
+      "Revise se a modelagem de dados esta correta",
+      "Analise a arquitetura e proponha melhorias",
+      "Interprete esse spec de 40 paginas",
+      "Crie a skill de identidade visual",
+    ],
+  },
+];
+
+export const faq: FaqItem[] = [
+  {
+    question: "Por que tantos docs antes de codar?",
+    answer: "Docs alimentam prompts. Sem contexto, a IA gera codigo generico. Com PRD + spec + design system + ADRs, a IA gera codigo que respeita suas decisoes, usa seus tokens visuais e segue suas convencoes. O investimento em docs se paga na primeira hora de coding.",
+  },
+  {
+    question: "Posso pular os docs e ir direto pro codigo?",
+    answer: "Pode, mas vai gastar mais tempo corrigindo do que economizou pulando. A regra e: dia 1, 80% docs e 20% codigo. Isso inverte nos dias seguintes.",
+  },
+  {
+    question: "O que e a pasta temp/?",
+    answer: "Lixo controlado. A IA gera muitos arquivos temporarios (dumps, rascunhos, JSONs de teste). Em vez de poluir o projeto, jogue tudo em temp/ — ela e git-ignored e pode ser limpa a qualquer momento.",
+  },
+  {
+    question: "Quando migrar de JSON local para Supabase?",
+    answer: "Quando precisar de: persistencia entre sessoes (dados nao perdem ao recarregar), compartilhamento entre usuarios, controle de acesso (RLS), ou operacoes em tempo real. O CLAUDE.md do app tem o passo a passo de migracao.",
+  },
+  {
+    question: "O que e uma ADR e quando criar?",
+    answer: "ADR = Architecture Decision Record. Crie quando tomar uma decisao tecnica que afeta o projeto (escolha de stack, biblioteca, padrao). Formato: Status + Decisao + Contexto + Consequencia. Nunca delete ADRs — se mudar de ideia, crie uma nova que referencia a anterior.",
+  },
+  {
+    question: "Como funciona a skill de identidade visual?",
+    answer: "Voce reune materiais da marca (brandbook, cores HEX, fontes), usa um prompt estruturado no Claude para gerar um SKILL.md, empacota como .skill e instala no Claude.ai. A partir dai, toda vez que pedir um artefato visual, a IA aplica automaticamente a identidade da empresa. Veja docs/guides/SKILL-CREATION-GUIDE.md.",
+  },
+  {
+    question: "O que fazer quando a IA gera codigo ruim?",
+    answer: "Nao tente com mais forca — melhore o ambiente. Pergunte: 'qual contexto esta faltando?'. Atualize o CLAUDE.md, escreva uma spec mais detalhada, adicione exemplos. Agentes replicam padroes do repo: se o repo tem codigo ruim, a IA vai gerar mais codigo ruim.",
+  },
+];
