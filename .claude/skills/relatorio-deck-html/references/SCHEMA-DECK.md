@@ -71,8 +71,24 @@ Correspondem a `%%CHAVE%%` em `assets/deck-base.html`. Tema **V4 preto + vermelh
 
 - Chaves ausentes: substituidas por vazio (pode gerar aviso no console).
 - Novos slides: edite `assets/deck-base.html` + este schema.
+- O template agora declara `data-slide-type`, `data-export-mode` e `data-editable-contract` por slide.
+- O significado desses atributos e o que pode ou nao mudar no HTML esta documentado em `references/ESTRUTURA-SEMANTICA-PPTX.md`.
+- `data-export-mode="editable"` prioriza texto/tabela nativos no PowerPoint.
+- `data-export-mode="raster"` prioriza fidelidade visual e entra como imagem no `PPTX final`.
+- `data-export-mode="auto"` resolve o melhor modo a partir do tipo/contrato do slide.
 - **Motor de preenchimento:** `scripts/skill-tools/deck-fill.mjs` na raiz do repo; o ficheiro `relatorio-deck-html/scripts/fill-deck.mjs` e um **wrapper** que chama esse motor (evita duplicar logica entre skills).
 - Exemplo **proposta comercial ficticia completa:** `examples/exemplo-proposta-comercial-fake.json`.
+
+## Regra para evolucao do template
+
+Ao mudar o HTML, diferencie:
+
+- mudanca visual: cor, espacamento, tipografia, borda, sombra
+- mudanca semantica: tipo de bloco, hierarquia, classe estrutural, componente
+
+Mudancas visuais costumam ser seguras.
+
+Mudancas semanticas exigem revisar o mapper do PPTX.
 
 ## Legibilidade em 16:9
 

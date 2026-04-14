@@ -32,6 +32,7 @@ Produzir um **ficheiro HTML** que se comporta como um **PPT**: slides com caixas
 | `examples/exemplo-proposta-comercial-fake.json` | Proposta comercial ficticia (tabela + SVG + texto rico) |
 | `README-DECK.md` | Uso rapido do script |
 | `references/SCHEMA-DECK.md` | Schema do JSON |
+| `references/ESTRUTURA-SEMANTICA-PPTX.md` | Contrato semantico do HTML para nao quebrar o PPTX editavel |
 
 **Padrao:** recursos da skill **colados** ao `SKILL.md`; **motores** reutilizaveis (ex. `deck-fill`) ficam em `scripts/skill-tools/` na raiz do repo com **wrapper** na skill.
 
@@ -47,7 +48,11 @@ cd .claude/skills/relatorio-deck-html   # ou .cursor / .agents / .codex — mesm
 node scripts/fill-deck.mjs examples/exemplo-proposta-comercial-fake.json
 ```
 
-5. Abrir `dist/deck-filled.html` no navegador (idealmente por `http://` na raiz do repo). Barra: **PDF**, **PPTX editavel** (texto + tabelas + SVG rasterizado; logo WebP→PNG), **PPTX imagem** (captura full-bleed), **Imprimir…**. Detalhes: `README-DECK.md`. Motor de preenchimento: `scripts/skill-tools/deck-fill.mjs`.
+5. Abrir `dist/deck-filled.html` no navegador (idealmente por `http://` na raiz do repo). Barra: **PDF**, **PPTX editável** (template-base atual preparado para sair 100% editável), **PPTX imagem** (captura full-bleed), **Imprimir…**. Detalhes: `README-DECK.md`. Motor de preenchimento: `scripts/skill-tools/deck-fill.mjs`.
+6. Para alta fidelidade final, preferir os scripts com Chromium real:
+   - `node scripts/deck-export-pdf.mjs ...`
+   - `node scripts/deck-export-pptx-raster.mjs ...`
+   - `node scripts/deck-export-pptx-hybrid.mjs ...`
 
 ## Origem A — Pos-sabatina
 
@@ -88,6 +93,8 @@ Use quando **nao** houver sabatina formal, mas existir material consolidado:
 - **Deterministico:** todos os campos em `replace` passam por **escape HTML** no script — texto puro, sem tags.
 - **Semi-livre:** `raw.BULLETS_HTML`, `FREE_HTML_*` — **sem escape**; o agente controla markup. Deve usar classes existentes (`.slot`, `.compact`, cores inline coerentes com o tema escuro) para nao “quebrar” o layout.
 - **0% deterministico (proposital):** slides “Livre 1 / Livre 2” — conteudo quase todo em `FREE_HTML_*`; o agente pode inserir estruturas novas (tabelas, colunas) desde que respeite legibilidade em 16:9.
+- **Export atual por slide:** o template define `data-export-mode` e `data-slide-type`; no estado atual do `deck-base.html`, todos os slides do fluxo principal estao marcados para saida editavel.
+- **Regra de ouro:** o deck atual nao e um conversor universal de qualquer HTML para PPTX. Ele depende de um contrato semantico; ver `references/ESTRUTURA-SEMANTICA-PPTX.md` antes de redesenhar a base.
 
 ## Checklist antes de entregar
 
@@ -101,6 +108,7 @@ Use quando **nao** houver sabatina formal, mas existir material consolidado:
 ## Referencia de schema e tema
 
 - **`references/SCHEMA-DECK.md`** — chaves `replace` / `raw` para `assets/deck-base.html`.
+- **`references/ESTRUTURA-SEMANTICA-PPTX.md`** — o que pode mudar sem quebrar o mapper do PPTX.
 - **`references/DESIGN-SYSTEM-V4.md`** — paleta **preto + vermelho** e logo `app/public/logov4.webp` em cada slide (`%%LOGO_SRC%%`).
 
 ## Erros comuns

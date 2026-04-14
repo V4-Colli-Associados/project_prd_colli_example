@@ -1,0 +1,16 @@
+{
+  "name": "relatorio-deck-html",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "deck:fill": "node scripts/fill-deck.mjs",
+    "deck:browser": "node scripts/deck-export-browser.mjs dist/deck-filled.html dist/browser-export --pdf",
+    "deck:pdf": "node scripts/deck-export-pdf.mjs dist/deck-filled.html dist/browser-pdf/deck.pdf",
+    "deck:pptx:raster": "node scripts/deck-export-pptx-raster.mjs dist/deck-filled.html dist/browser-pptx/deck_imagem_browser.pptx",
+    "deck:pptx:hybrid": "node scripts/deck-export-pptx-hybrid.mjs dist/deck-filled.html dist/browser-pptx/deck_final_hibrido.pptx"
+  },
+  "devDependencies": {
+    "playwright": "^1.56.1",
+    "pptxgenjs": "^4.0.1"
+  }
+}

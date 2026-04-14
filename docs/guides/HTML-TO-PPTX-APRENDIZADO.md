@@ -1,84 +1,165 @@
-# Aprendizado: converter HTML em PPTX (deck V4 Colli)
+# Aprendizados: skill `relatorio-deck-html` (deck V4 + HTML → PDF/PPTX)
 
-Documento de contexto para continuar o trabalho (outra IA, outro dev). Resume o que o projeto já faz, limitações reais do PowerPoint e caminhos promissores.
-
-## Contexto do repo
-
-- **Template / motor:** skill `relatorio-deck-html` em `.claude/skills/relatorio-deck-html/`.
-- **HTML base:** `assets/deck-base.html` — slides em `<section class="slide">`, CSS próprio (16:9 lógico no browser), export via toolbar.
-- **Preenchimento:** `scripts/skill-tools/deck-fill.mjs` substitui `%%CHAVES%%` a partir de JSON (`examples/*.json`).
-- **Saída de teste:** `dist/deck-filled.html` (abrir no browser; precisa rede para CDNs: html2canvas, jsPDF, PptxGenJS).
-
-## Duas estratégias já implementadas
-
-### 1. PPTX “imagem” (pixel-perfect, não editável)
-
-- **Como:** `html2canvas` captura cada slide → JPEG → um slide PPTX com imagem full-bleed (`10" × 5.625"` para layout 16:9).
-- **Prós:** fidelidade visual alta (gradientes, bordas tracejadas, grid, tipografia).
-- **Contras:** texto não é editável; arquivo pesado; depende de fontes/carregamento e CORS de assets.
-
-### 2. PPTX “editável” (PptxGenJS)
-
-- **Como:** `addEditableSlideFromDom` percorre **filhos diretos** do `<section class="slide">` e mapeia para `addText`, `addTable`, `addImage`, `addShape`.
-- **Prós:** texto e tabelas nativas no PowerPoint; SVG vira PNG e entra como imagem; logo WebP convertido para PNG antes de embutir.
-- **Contras:** **não existe** conversão fiel de “HTML+CSS arbitrário” para OOXML; é um **mapeamento manual** por padrões de DOM (`slide-label`, `layout-split`, `rich-html`, `.slot`, etc.). Qualquer layout novo exige código novo ou cai em `plainText()`.
-
-Arquivo de referência: em `deck-base.html`, bloco `<script>` com `addEditableSlideFromDom`, `pptxWalkColumn`, `appendRichHtmlToPptx`, `svgToPngDataUrlForPptx`, `pptxSlotFrame`, `dataUrlToPngForPptx`.
-
-## Problemas já encontrados e como foram tratados
-
-| Problema | Causa provável | Mitigação no projeto |
-|----------|----------------|----------------------|
-| Logo distorcida no PPTX | `addImage` com largura/altura fixas | Calcular proporção a partir de `naturalWidth` / `naturalHeight` após PNG. |
-| Tabela em `.free-html` virou texto | Só se usava `innerText` no container | Rotear `.free-html` com `appendRichHtmlToPptx` (usa `querySelector('table')` + `addTable`). |
-| SVG do gráfico não aparecia | Rasterização SVG→PNG frágil (tamanho implícito) | `svgToPngDataUrlForPptx`: canvas dimensionado pelo `viewBox` (ou width/height) do SVG. |
-| Bordas “some” no editável | CSS não vira shape OOXML | `pptxSlotFrame`: `RECTANGLE` com fill + line antes do texto; aplicado a slots, pilares, compare, KPI, moldura opcional em torno de tabelas. |
-| Colunas (`layout-split`) | Export linear não sabia dividir X | `pptxWalkColumn` recursivo com larguras de coluna; `appendRichHtmlToPptx` recebe `{ x, w }`. |
-
-## Limitações estruturais (importante para a próxima IA)
-
-1. **PowerPoint não é um browser.** Gradientes complexos, `backdrop-filter`, sombras e bordas tracejadas CSS não têm equivalente 1:1 sem imagem ou sem muito código por slide.
-2. **PptxGenJS** é ótimo para **primitivas** (texto, tabela, imagem, retângulo). Para **HTML rico genérico**, ou se rasteriza, ou se define um **design system** de componentes com mapeamento explícito.
-3. **Ordem de empilhamento:** shapes desenhados antes do texto ficam atrás; útil para “caixas” de slot.
-4. **SVG com fontes externas** pode renderizar diferente no canvas; preferir paths ou fontes system no SVG se precisar precisão absoluta.
-
-## Direções para “avanço maior” (sugestões objetivas)
-
-Ordem do que costuma dar mais ganho vs esforço:
-
-1. **Pipeline híbrido por slide:** flag no JSON ou `data-export="raster"` em `<section>` para slides complexos irem só como imagem; o resto editável. Melhora percepção sem abandonar edição onde importa.
-2. **Chromium headless (Playwright/Puppeteer):** renderizar HTML em alta resolução e recortar por slide → PNG por slide → PPTX só imagens **ou** OCR/layout analysis (mais pesado).
-3. **LibreOffice / unoconv:** `html` → PDF/intermediário → PPTX (qualidade e editabilidade variam; vale PoC isolado).
-4. **python-pptx** ou **OOXML manual:** mesmo desafio de mapeamento; útil se a equipe preferir Python e controle fino de partes.
-5. **“HTML restrito” no deck:** contrato de tags/classes (como já há com `layout-split`, `rich-html`) e validação no fill — reduz surpresas no export.
-6. **Chart:** em vez de só SVG, gerar também **Excel embutido** ou imagem + tabela de dados em slide oculto (avanço de negócio, não só visual).
-
-## Comandos úteis
-
-```bash
-# Espelhar skill Claude → Cursor/Agents/Codex
-bash scripts/sync-skills.sh
-
-# Regenerar HTML de exemplo
-cd .claude/skills/relatorio-deck-html
-node scripts/fill-deck.mjs examples/exemplo-proposta-comercial-fake.json
-```
-
-## Referências no projeto
-
-| O quê | Onde |
-|-------|------|
-| Schema de chaves JSON | `.claude/skills/relatorio-deck-html/references/SCHEMA-DECK.md` |
-| Motor de replace | `scripts/skill-tools/deck-fill.mjs` |
-| Export PDF/PPTX + mapeamento DOM | `.claude/skills/relatorio-deck-html/assets/deck-base.html` (scripts finais do `<body>`) |
-| Skill markdown | `.claude/skills/relatorio-deck-html/SKILL.md` |
-
-## O que pedir à próxima IA
-
-- Objetivo explícito: **só pixel-perfect**, **só editável**, ou **híbrido** (por slide ou por região).
-- Se editável: lista de **padrões HTML** que devem ser suportados (ex.: só `table.deck-proposal-table` + `div.layout-split` + …).
-- Aceitar **trade-off:**100% fidelidade visual com texto editável em HTML arbitrário **não é realista** num único passo sem raster ou sem produto tipo layout engine.
+Documento de **contexto e decisões** para quem continua o trabalho (outra IA, outro dev). Cobre a **estrutura da skill**, o **template HTML**, os **três exports** e **limitações** reais — não só “HTML para PPTX”.
 
 ---
 
-*Última atualização alinhada ao deck V4 Colli (`relatorio-deck-html`): export editável com tabelas, SVG rasterizado, logo proporcional, molduras em slots e suporte a `layout-split`.*
+## 1. Papel da skill no repo
+
+| O quê | Descrição |
+|-------|-----------|
+| **Objetivo** | Gerar um **HTML** com slides 16:9, tema V4 (preto + vermelho), a partir de **JSON** determinístico + blocos HTML crus (`raw`). |
+| **Fonte única** | `.claude/skills/relatorio-deck-html/` — alterar aqui; depois `bash scripts/sync-skills.sh` espelha para `.cursor/skills/`, `.agents/skills/`, `.codex/skills/`. |
+| **Motor de preenchimento** | `scripts/skill-tools/deck-fill.mjs` (raiz do repo). Wrapper: `relatorio-deck-html/scripts/fill-deck.mjs`. |
+| **Contrato de dados** | `references/SCHEMA-DECK.md` — chaves `replace` (escape) vs `raw` (HTML literal). |
+| **Instruções para agentes** | `SKILL.md` na pasta da skill (fluxo, checklist, erros comuns). |
+
+**Entregável principal no browser:** `dist/deck-filled.html` (gerado localmente; pastas `dist` podem estar no `.gitignore` — o que versiona é template + JSON + scripts).
+
+---
+
+## 2. Estrutura de ficheiros (skill)
+
+```
+relatorio-deck-html/
+  SKILL.md                 # Como usar a skill, fluxo, checklist
+  README-DECK.md           # Uso rápido do fill
+  assets/deck-base.html    # Template único: CSS + HTML dos slides + scripts de export
+  scripts/fill-deck.mjs    # Chama deck-fill.mjs no repo
+  examples/*.json          # Dados de exemplo (ex.: proposta comercial fictícia)
+  references/
+    SCHEMA-DECK.md         # Chaves JSON
+    DESIGN-SYSTEM-V4.md    # Tema / logo
+```
+
+O ficheiro **grande** é `deck-base.html` (~1,7k linhas): nele vivem design system, marcação de cada slide e toda a lógica **PDF / PPTX editável / PPTX imagem**.
+
+---
+
+## 3. Modelo de conteúdo: determinístico vs livre
+
+- **`replace.*`** — texto puro; o motor faz **escape HTML**. Ideal para títulos, parágrafos curtos, métricas.
+- **`raw.*`** — HTML **sem escape**; o agente controla markup (`BULLETS_HTML`, `PRICING_TABLE_HTML`, `CHART_SVG_HTML`, `FREE_HTML_*`, etc.).
+- **Slides “Livre 1 / 2”** — quase só `FREE_HTML_*`; útil para tabelas ou grelhas que não cabem no schema fixo.
+
+**Truncagem:** `.slot` e listas usam `max-height` + `overflow: hidden` no CSS; textos longos **cortam-se** no ecrã — convém resumir no JSON.
+
+---
+
+## 4. Sistema de layout no HTML (contrato visual)
+
+O template não é HTML genérico: há **classes convencionadas** que o export PPTX editável também tenta respeitar.
+
+| Classe / padrão | Uso |
+|-----------------|-----|
+| `.slide` / `.slide--light` | Slide escuro ou claro; `aspect-ratio: 16/9`. |
+| `.slide-label` | Eyebrow / secção (export mapeado). |
+| `.layout-split`, `.layout-split--55`, `--56`, `--37`, `--tight` | Grelha2 ou 3 colunas; gaps e proporções. |
+| `.layout-stack` | Coluna vertical de blocos. |
+| `.deck-col-with-icon` | Ícone + conteúdo. |
+| `.slot` | Caixa de conteúdo (tracejada no tema); variantes `.tall`, `.medium`, `.small`. |
+| `.ph-icon`, `.ph-media` | Placeholders para ícone / imagem (PPTX editável muitas vezes **ignora** ou substitui por nota). |
+| `.rich-html` | Bloco com tabela ou SVG (export trata `table` + `svg`). |
+| `.pillars` / `.pillar` | Três colunas de pilares. |
+| `.compare` | Antes / depois. |
+| `.deck-chart-legend` + `.swatch` | Legenda ao lado do gráfico (`CHART_LEGEND_HTML`). |
+
+**Decisões visuais recentes (HTML):** cantos **menos arredondados** (ex.: slide ~8px, slots ~5px); **tracejados mais visíveis** (`1.5px`, cor de borda reforçada); `layout-split` com **`align-items: start`** para colunas alinhadas ao topo; área do gráfico com borda tracejada coerente.
+
+**Nota:** títulos podem ter `class="slot"` com `border:none` inline para **não** parecerem caixa no browser — útil para PPTX que desenha moldura só quando há “slot” semântico; pode gerar **inconsistência visual** se não for disciplinado.
+
+---
+
+## 5. Três formas de saída (toolbar no `deck-base.html`)
+
+| Botão | Tecnologia | O que obténs |
+|-------|------------|--------------|
+| **PDF** | html2canvas + jsPDF | Uma página por slide; **próximo do pixel** do browser. |
+| **PPTX imagem** | html2canvas + PptxGenJS | Slides só com **foto**16:9; **não editável** como texto; fidelidade alta. |
+| **PPTX editável** | PptxGenJS + mapeamento DOM | Texto e tabelas nativos; SVG → PNG; logo WebP → PNG; **não replica CSS**. |
+
+**Regra prática:** para **apresentação final bonita**, PDF ou **PPTX imagem** alinham-se com o HTML. Para **editar no PowerPoint**, **PPTX editável** — aceitar diferenças ou investir mais em `addEditableSlideFromDom` / `pptxWalkColumn`.
+
+---
+
+## 6. PPTX editável — o que está implementado
+
+Funções principais (no `<script>` final de `deck-base.html`):
+
+- **`addEditableSlideFromDom`** — itera filhos diretos do `<section class="slide">`; trata `accent-bar`, `slide-label`, `layout-split`, `rich-html`, `pillars`, `compare`, slots, `free-html` via `appendRichHtmlToPptx`, etc.
+- **`pptxWalkColumn`** — percorre colunas dentro de `layout-split` / `layout-stack` / `aside` com larguras `x`/`w`.
+- **`appendRichHtmlToPptx`** — primeira `table` → `addTable`; primeiro `svg` → PNG; senão `plainText`. Moldura à volta da tabela: **`pptxSlotFrame(..., "solid")`**.
+- **`svgToPngDataUrlForPptx`** — raster com canvas usando **`viewBox`** (ou width/height) do SVG.
+- **`dataUrlToPngForPptx`** — WebP/outros → PNG para o logo.
+- **`pptxSlotFrame`** — retângulo por baixo do texto; contorno **`line.dashType: "dash"`** para imitar tracejado dos slots; **sólido** só na moldura de tabelas.
+- **Logo** — dimensões proporcionais (`naturalWidth` / `naturalHeight`), posicionada no canto inferior direito do slide 16:9.
+
+**Problemas já corrigidos (histórico):** logo esticada; tabela dentro de `.free-html` em texto cru; SVG ausente; colunas ignoradas; molduras ausentes — ver secção 8.
+
+---
+
+## 7. Limitações estruturais (importante)
+
+1. **PowerPoint não é um browser** — gradientes fortes, sombras, `backdrop-filter`, tracejado **idêntico** ao CSS: só com raster ou aproximação (ex.: `dash` no outline do shape).
+2. **HTML arbitrário → OOXML** sem perda **não existe** num único passo; o projeto usa **mapeamento por padrões**. Layout novo = código novo ou degradação para texto.
+3. **Placeholders** (`ph-icon`, `ph-media`) no PPTX editável podem não aparecer como no HTML.
+4. **SVG** com fontes web pode rasterizar diferente do ecrã.
+5. **`.gitignore`** pode excluir `dist/` — o pipeline local gera `deck-filled.html`; quem clona o repo precisa correr `fill-deck.mjs`.
+
+---
+
+## 8. Histórico de problemas → mitigações| Problema | Mitigação |
+|----------|-----------|
+| Logo distorcida no PPTX | Proporção a partir do PNG decodificado; posição no canto. |
+| Tabela no último slide em texto | `.free-html` passa por `appendRichHtmlToPptx`. |
+| SVG do gráfico não aparece | Raster com `viewBox`; tamanho da imagem com aspect ratio. |
+| Bordas “somem” no editável | `pptxSlotFrame` + texto com margem interna; tracejado via `dashType`. |
+| `layout-split` ignorado | `pptxWalkColumn` + larguras de coluna. |
+| Cantos “muito redondos” / tracejado fraco | Ajuste de `border-radius` e `1.5px dashed` no CSS; PPTX com `dash`. |
+
+---
+
+## 9. Direções para evolução (prioridade sugerida)
+
+1. **Híbrido por slide** — atributo ou chave JSON: slide só como **imagem** no PPTX editável, resto nativo.
+2. **Contrato de layout** — validar no fill que só aparecem classes suportadas (reduz surpresas no export).
+3. **Google Slides** — outro produto (API, template, OAuth); não é extensão trivial deste HTML.
+4. **Produto “só PDF/HTML”** — se o cliente não precisa de `.pptx`, simplificar comunicação e menos manutenção no PPTX editável.
+5. **Chromium headless** — alternativa para captura mais estável que só html2canvas (custo de infra).
+
+---
+
+## 10. Comandos úteis
+
+```bash
+# Raiz do repo project_prd_colli_example
+bash scripts/sync-skills.sh
+
+cd .claude/skills/relatorio-deck-html
+node scripts/fill-deck.mjs examples/exemplo-proposta-comercial-fake.json
+# Abrir dist/deck-filled.html no browser (http:// recomendado por causa de fontes/CDN)
+```
+
+---
+
+## 11. Referências rápidas
+
+| Ficheiro | Conteúdo |
+|----------|----------|
+| `docs/guides/HTML-TO-PPTX-APRENDIZADO.md` | Este doc (estrutura + aprendizados). |
+| `.claude/skills/relatorio-deck-html/SKILL.md` | Uso da skill para agentes. |
+| `.claude/skills/relatorio-deck-html/references/SCHEMA-DECK.md` | Chaves JSON. |
+| `scripts/sync-skills.sh` | Espelho Claude → Cursor/Agents/Codex. |
+| `scripts/skill-tools/deck-fill.mjs` | Motor `%%CHAVE%%` + logo em data URL. |
+
+---
+
+## 12. O que pedir à próxima IA
+
+- Objetivo do entregável: **PDF**, **PPTX imagem**, **PPTX editável**, ou **combinação** (e em quais slides).
+- Lista de **padrões DOM** que têm de ser suportados no editável.
+- Aceitar que **fidelidade 100%** entre HTML e PPTX editável **sem** raster por slide **não é realista** para HTML livre.
+
+---
+
+*Última atualização: estrutura da skill `relatorio-deck-html`, sistema de layout no `deck-base.html`, exports PDF / PPTX imagem / PPTX editável (incl. molduras tracejadas vs sólidas em tabelas), e decisões visuais recentes nos slots e slides.*

@@ -23,7 +23,7 @@
       --accent-bright: #ef4444;
       --accent-dark: #991b1b;
       --slot-bg: rgba(220, 38, 38, 0.08);
-      --slot-border: rgba(220, 38, 38, 0.45);
+      --slot-border: rgba(248, 113, 113, 0.72);
       --warn: #f87171;
       --light-bg: #f4f4f5;
       --light-text: #0a0a0a;
@@ -46,9 +46,9 @@
       aspect-ratio: 16 / 9;
       background: linear-gradient(160deg, var(--bg-deep) 0%, var(--bg-mid) 45%, var(--bg-elevated) 100%);
       border: 1px solid rgba(220, 38, 38, 0.22);
-      border-radius: 14px;
-      padding: 2rem 2.25rem;
-      padding-bottom: 2.75rem;
+      border-radius: 8px;
+      padding: 1.85rem 2rem;
+      padding-bottom: 2.5rem;
       margin-bottom: 2rem;
       display: flex;
       flex-direction: column;
@@ -56,11 +56,26 @@
       page-break-after: always;
       box-shadow: 0 24px 56px rgba(0, 0, 0, 0.55);
     }
+    .slide::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background:
+        radial-gradient(circle at top right, rgba(239, 68, 68, 0.16), transparent 34%),
+        radial-gradient(circle at bottom left, rgba(239, 68, 68, 0.09), transparent 28%);
+      pointer-events: none;
+    }
     .slide--light {
       background: linear-gradient(180deg, #fafafa 0%, var(--light-bg) 100%);
       border-color: rgba(0, 0, 0, 0.08);
       color: var(--light-text);
       box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
+    }
+    .slide--light::before {
+      background:
+        radial-gradient(circle at top right, rgba(220, 38, 38, 0.08), transparent 32%),
+        radial-gradient(circle at bottom left, rgba(220, 38, 38, 0.05), transparent 24%);
     }
     .slide--light .slide-label {
       color: var(--accent);
@@ -69,7 +84,7 @@
     .slide--light .slot {
       color: var(--light-text);
       background: rgba(255, 255, 255, 0.85);
-      border-color: rgba(220, 38, 38, 0.28);
+      border-color: rgba(185, 28, 28, 0.55);
     }
     .slide--light h2 { color: var(--light-muted); }
     .slide--light .muted, .slide--light p.hint { color: var(--light-muted) !important; }
@@ -117,13 +132,14 @@
     }
     .slot {
       background: var(--slot-bg);
-      border: 1px dashed var(--slot-border);
-      border-radius: 10px;
+      border: 1.5px dashed var(--slot-border);
+      border-radius: 5px;
       padding: 0.65rem 0.85rem;
       min-height: 2.75rem;
       font-size: 0.92rem;
       line-height: 1.45;
       color: var(--text);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
     }
     .slot.tall { min-height: 5.5rem; max-height: 8.5rem; overflow: hidden; }
     .slot.medium { min-height: 3.5rem; max-height: 6rem; overflow: hidden; }
@@ -165,7 +181,7 @@
     .pillar {
       background: var(--surface);
       border: 1px solid rgba(220, 38, 38, 0.25);
-      border-radius: 10px;
+      border-radius: 5px;
       padding: 0.65rem 0.75rem;
       min-height: 5rem;
       max-height: 7.5rem;
@@ -188,7 +204,7 @@
     }
     .compare-col {
       background: var(--surface);
-      border-radius: 10px;
+      border-radius: 6px;
       padding: 0.75rem;
       border: 1px solid rgba(255, 255, 255, 0.1);
       max-height: 9.5rem;
@@ -219,11 +235,11 @@
     }
     .free-html {
       flex: 1;
-      border: 1px dashed rgba(220, 38, 38, 0.4);
-      border-radius: 10px;
+      border: 1.5px dashed rgba(248, 113, 113, 0.55);
+      border-radius: 6px;
       padding: 1rem;
       min-height: 10rem;
-      background: rgba(220, 38, 38, 0.05);
+      background: linear-gradient(180deg, rgba(220, 38, 38, 0.07), rgba(255, 255, 255, 0.02));
       overflow: hidden;
     }
     .free-html:empty::before {
@@ -236,9 +252,9 @@
       flex: 1;
       min-height: 0;
       overflow: auto;
-      border-radius: 10px;
+      border-radius: 6px;
       border: 1px solid rgba(220, 38, 38, 0.35);
-      background: rgba(0, 0, 0, 0.25);
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.16));
       padding: 0.65rem 0.75rem;
     }
     .slide--light .rich-html {
@@ -257,6 +273,42 @@
       padding: 0.45rem 0.55rem;
       text-align: left;
       vertical-align: top;
+    }
+    .deck-cover-layout .slide-open-copy {
+      justify-content: space-between;
+    }
+    .hero-preview {
+      padding: 0.3rem;
+      border-radius: 10px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(220,38,38,0.08));
+      border: 1px solid rgba(220, 38, 38, 0.24);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+    }
+    .hero-preview .slot {
+      background: rgba(255,255,255,0.04);
+    }
+    .hero-preview__lead {
+      min-height: 4.3rem;
+      font-size: 0.88rem;
+    }
+    .hero-preview__chip {
+      min-height: 2.35rem;
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+    }
+    .architecture-stack,
+    .dashboard-stack,
+    .stakeholder-stack,
+    .risk-stack {
+      justify-content: space-between;
+    }
+    .architecture-stack__card,
+    .dashboard-stack .slot,
+    .stakeholder-stack .slot,
+    .risk-stack .slot {
+      min-height: 2.85rem;
+      font-size: 0.78rem;
     }
     .slide--light .deck-proposal-table th,
     .slide--light .deck-proposal-table td {
@@ -299,10 +351,10 @@
     .layout-split {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 0.85rem 1rem;
+      gap: 0.65rem 0.85rem;
       flex: 1;
       min-height: 0;
-      align-items: stretch;
+      align-items: start;
     }
     .layout-split--55 { grid-template-columns: 1.12fr 0.88fr; }
     .layout-split--56 { grid-template-columns: 1.18fr 0.82fr; }
@@ -311,7 +363,7 @@
     .layout-stack {
       display: flex;
       flex-direction: column;
-      gap: 0.55rem;
+      gap: 0.42rem;
       flex: 1;
       min-height: 0;
     }
@@ -342,10 +394,10 @@
     .ph-icon {
       width: 2.35rem;
       height: 2.35rem;
-      border-radius: 11px;
+      border-radius: 5px;
       flex-shrink: 0;
       background: linear-gradient(155deg, rgba(220, 38, 38, 0.32), rgba(10, 10, 10, 0.65));
-      border: 1px dashed rgba(248, 113, 113, 0.45);
+      border: 1.5px dashed rgba(248, 113, 113, 0.6);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -359,7 +411,7 @@
       width: 1.85rem;
       height: 1.85rem;
       font-size: 0.55rem;
-      border-radius: 8px;
+      border-radius: 4px;
     }
     .slide--light .ph-icon {
       background: linear-gradient(155deg, rgba(220, 38, 38, 0.18), rgba(255, 255, 255, 0.9));
@@ -367,8 +419,8 @@
       color: #b91c1c;
     }
     .ph-media {
-      border: 1px dashed rgba(220, 38, 38, 0.42);
-      border-radius: 12px;
+      border: 1.5px dashed rgba(248, 113, 113, 0.5);
+      border-radius: 6px;
       background: rgba(0, 0, 0, 0.22);
       display: flex;
       align-items: center;
@@ -427,6 +479,9 @@
       justify-content: center;
       padding: 0.5rem 0.6rem;
       background: rgba(0, 0, 0, 0.18);
+      border: 1.5px dashed rgba(248, 113, 113, 0.35);
+      border-radius: 5px;
+      box-sizing: border-box;
     }
     .slide--light .deck-chart-wrap {
       background: rgba(0, 0, 0, 0.04);
@@ -440,12 +495,13 @@
     .rich-html.deck-chart-wrap--main {
       flex: 1;
       background: transparent;
-      border: none;
+      border: 1.5px dashed rgba(248, 113, 113, 0.38);
+      border-radius: 5px;
       padding: 0.2rem 0.35rem 0.35rem;
     }
     .slide--light .rich-html.deck-chart-wrap--main {
       background: transparent;
-      border: none;
+      border-color: rgba(220, 38, 38, 0.35);
     }
     .pillar .deck-pillar {
       align-items: flex-start;
@@ -509,7 +565,7 @@
       font-size: 0.85rem;
       font-weight: 700;
       padding: 0.55rem 1.15rem;
-      border-radius: 10px;
+      border-radius: 7px;
       border: 1px solid rgba(255, 255, 255, 0.12);
       color: #fff;
       cursor: pointer;
@@ -608,7 +664,7 @@
         <span class="export-ico" aria-hidden="true">&#128196;</span>
         Baixar PDF
       </button>
-      <button type="button" class="btn-pptx" id="btn-download-pptx" title="PPTX com caixas de texto e formas editaveis (PptxGenJS)">
+      <button type="button" class="btn-pptx" id="btn-download-pptx" title="PPTX editavel com todos os slides estruturados para PowerPoint">
         <span class="export-ico" aria-hidden="true">&#128189;</span>
         PPTX editável
       </button>
@@ -620,26 +676,36 @@
     </div>
     <p class="export-progress" id="export-progress" aria-live="polite"></p>
     <p class="export-hint">
-      <strong>PDF</strong> e <strong>PPTX imagem</strong> usam captura (<strong>html2canvas</strong>). <strong>PPTX editável</strong> usa texto, <strong>tabelas nativas</strong> (de <code>.rich-html table</code>) e <strong>SVG rasterizado para PNG</strong> (PowerPoint nao embute WebP no canto). Motor de preenchimento: <code>scripts/skill-tools/deck-fill.mjs</code>. Skill <code>pptx</code>: OOXML avançado.
+      <strong>PDF</strong> e <strong>PPTX imagem</strong> usam captura (<strong>html2canvas</strong>). <strong>PPTX editável</strong> usa mapeamento nativo de texto, cards, tabelas, metricas e grafico para manter o visual o mais proximo possivel do HTML. Motor de preenchimento: <code>scripts/skill-tools/deck-fill.mjs</code>. Skill <code>pptx</code>: OOXML avançado.
     </p>
   </header>
   <div class="deck">
 
-    <section class="slide">
+    <section class="slide" data-slide-id="cover" data-slide-type="cover" data-export-mode="editable" data-editable-contract="structured">
       <img class="slide-logo" src="%%LOGO_SRC%%" alt="V4 Colli Associados" width="120" height="36" decoding="async" />
       <div class="accent-bar"></div>
       <span class="slide-label">Abertura</span>
-      <div class="layout-split layout-split--55">
+      <div class="layout-split layout-split--55 deck-cover-layout">
         <div class="slide-open-copy" style="min-width:0;display:flex;flex-direction:column;gap:0.35rem;">
           <h1 class="slot small" style="border:none;background:transparent;padding:0;">%%TITLE%%</h1>
           <h2 class="slot small" style="border:none;background:transparent;color:var(--muted);padding:0;">%%SUBTITLE%%</h2>
           <p class="slot small" style="margin-top:auto;font-size:0.78rem;color:var(--muted);border:none;background:transparent;">%%META_LINE%%</p>
         </div>
-        <div class="ph-media ph-media--hero"><span>Placeholder · imagem hero · produto · diagrama</span></div>
+        <div class="layout-stack hero-preview" style="min-width:0;">
+          <div class="slot medium hero-preview__lead">Portal autenticado multi-tenant com auto-servico, documentos fiscais, timeline operacional e camada de insights para steering.</div>
+          <div class="layout-split layout-split--tight hero-preview__stats">
+            <div class="slot small hero-preview__chip">Auto-servico B2B</div>
+            <div class="slot small hero-preview__chip">Governanca LGPD</div>
+          </div>
+          <div class="layout-split layout-split--tight hero-preview__stats">
+            <div class="slot small hero-preview__chip">Rollout em waves</div>
+            <div class="slot small hero-preview__chip">Insights como add-on</div>
+          </div>
+        </div>
       </div>
     </section>
 
-    <section class="slide">
+    <section class="slide" data-slide-id="impact" data-slide-type="hero-stat" data-export-mode="editable" data-editable-contract="structured">
       <img class="slide-logo" src="%%LOGO_SRC%%" alt="V4 Colli Associados" width="120" height="36" decoding="async" />
       <span class="slide-label">Impacto em destaque</span>
       <div class="layout-split layout-split--tight">
@@ -658,7 +724,7 @@
       </div>
     </section>
 
-    <section class="slide slide--light">
+    <section class="slide slide--light" data-slide-id="problem-goal" data-slide-type="problem-goal" data-export-mode="editable" data-editable-contract="structured">
       <img class="slide-logo" src="%%LOGO_SRC%%" alt="V4 Colli Associados" width="120" height="36" decoding="async" />
       <span class="slide-label">Problema &amp; objetivo</span>
       <div class="layout-split">
@@ -673,7 +739,7 @@
       </div>
     </section>
 
-    <section class="slide">
+    <section class="slide" data-slide-id="persona-decision" data-slide-type="persona-decision" data-export-mode="editable" data-editable-contract="structured">
       <img class="slide-logo" src="%%LOGO_SRC%%" alt="V4 Colli Associados" width="120" height="36" decoding="async" />
       <span class="slide-label">Usuario &amp; decisao Skill vs Interface</span>
       <div class="layout-split">
@@ -691,7 +757,7 @@
       </div>
     </section>
 
-    <section class="slide">
+    <section class="slide" data-slide-id="scope" data-slide-type="scope-split" data-export-mode="editable" data-editable-contract="structured">
       <img class="slide-logo" src="%%LOGO_SRC%%" alt="V4 Colli Associados" width="120" height="36" decoding="async" />
       <span class="slide-label">Escopo &amp; fora de escopo</span>
       <div class="layout-split" style="flex:1;min-height:0;">
@@ -706,7 +772,7 @@
       </div>
     </section>
 
-    <section class="slide slide--light">
+    <section class="slide slide--light" data-slide-id="requirements" data-slide-type="requirements-list" data-export-mode="editable" data-editable-contract="structured">
       <img class="slide-logo" src="%%LOGO_SRC%%" alt="V4 Colli Associados" width="120" height="36" decoding="async" />
       <span class="slide-label">Requisitos &amp; criterios</span>
       <p class="muted" style="margin:0 0 0.35rem;font-size:0.72rem;">Top requisitos (P0/P1)</p>
@@ -715,7 +781,7 @@
       <div class="slot medium">%%SUCCESS_METRIC%%</div>
     </section>
 
-    <section class="slide">
+    <section class="slide" data-slide-id="why-now" data-slide-type="timeline" data-export-mode="editable" data-editable-contract="structured">
       <img class="slide-logo" src="%%LOGO_SRC%%" alt="V4 Colli Associados" width="120" height="36" decoding="async" />
       <span class="slide-label">Por que agora</span>
       <h2 class="slot small" style="border:none;background:transparent;padding:0;color:var(--text);">%%WHY_NOW_TITLE%%</h2>
@@ -723,7 +789,7 @@
       <div style="margin-top:0.6rem;flex:1;min-height:0;overflow:hidden;">%%TIMELINE_HTML%%</div>
     </section>
 
-    <section class="slide">
+    <section class="slide" data-slide-id="pillars" data-slide-type="pillars" data-export-mode="editable" data-editable-contract="structured">
       <img class="slide-logo" src="%%LOGO_SRC%%" alt="V4 Colli Associados" width="120" height="36" decoding="async" />
       <span class="slide-label">Solucao em pilares</span>
       <div class="pillars">
@@ -757,7 +823,7 @@
       </div>
     </section>
 
-    <section class="slide slide--light">
+    <section class="slide slide--light" data-slide-id="before-after" data-slide-type="before-after" data-export-mode="editable" data-editable-contract="structured">
       <img class="slide-logo" src="%%LOGO_SRC%%" alt="V4 Colli Associados" width="120" height="36" decoding="async" />
       <span class="slide-label">Antes &amp; depois</span>
       <div class="compare">
@@ -782,7 +848,7 @@
       </div>
     </section>
 
-    <section class="slide">
+    <section class="slide" data-slide-id="architecture" data-slide-type="architecture" data-export-mode="editable" data-editable-contract="structured">
       <img class="slide-logo" src="%%LOGO_SRC%%" alt="V4 Colli Associados" width="120" height="36" decoding="async" />
       <span class="slide-label">Stack &amp; tecnologia</span>
       <div class="layout-split layout-split--56">
@@ -791,24 +857,30 @@
           <div class="slot tall" style="max-height:6rem;">%%TECH_BODY%%</div>
           <div style="overflow:hidden;max-height:4.5rem;">%%TECH_BADGES_HTML%%</div>
         </div>
-        <div class="layout-stack" style="min-width:0;">
-          <div class="ph-media ph-media--sm" style="min-height:4.8rem;"><span>Arquitetura · print · diagrama C4</span></div>
-          <div class="ph-icon ph-icon--sm" style="width:100%;max-width:4rem;margin:0 auto;" title="Stack icon">API</div>
+        <div class="layout-stack architecture-stack" style="min-width:0;">
+          <p class="muted" style="margin:0;font-size:0.72rem;">Fluxo simplificado</p>
+          <div class="slot small architecture-stack__card">Canal: portal web, auth, RBAC, preferencia de alertas e experiencia de conta.</div>
+          <div class="slot small architecture-stack__card">Core: pedidos, timeline, anexos, notificacoes e orquestracao de eventos.</div>
+          <div class="slot small architecture-stack__card">Dados: Supabase, RLS por tenant, auditoria e observabilidade com OTel.</div>
         </div>
       </div>
     </section>
 
-    <section class="slide">
+    <section class="slide" data-slide-id="kpi-grid" data-slide-type="kpi-grid" data-export-mode="editable" data-editable-contract="structured">
       <img class="slide-logo" src="%%LOGO_SRC%%" alt="V4 Colli Associados" width="120" height="36" decoding="async" />
       <span class="slide-label">Metricas &amp; KPIs</span>
       <p style="margin:0 0 0.45rem;font-size:0.72rem;color:var(--muted);">%%KPI_INTRO%%</p>
       <div class="layout-split layout-split--tight">
         <div class="kpi-zone" style="flex:1;overflow:hidden;max-height:8.5rem;min-width:0;">%%KPI_HTML%%</div>
-        <div class="ph-media ph-media--sm" style="min-height:6.5rem;align-self:stretch;"><span>Mini dashboard · print</span></div>
+        <div class="layout-stack dashboard-stack" style="min-width:0;align-self:stretch;">
+          <div class="slot small">Leitura semanal por cluster, baseline e meta alvo por wave.</div>
+          <div class="slot small">Adoção piloto acompanhada por usuarios ativos, tickets evitados e SLA.</div>
+          <div class="slot small">Steering mensal consolida ROI, risco e prioridade de rollout.</div>
+        </div>
       </div>
     </section>
 
-    <section class="slide slide--light">
+    <section class="slide slide--light" data-slide-id="stakeholders" data-slide-type="stakeholders" data-export-mode="editable" data-editable-contract="structured">
       <img class="slide-logo" src="%%LOGO_SRC%%" alt="V4 Colli Associados" width="120" height="36" decoding="async" />
       <span class="slide-label">Pessoas &amp; stakeholders</span>
       <div class="layout-split layout-split--56 layout-split--tight" style="flex:1;min-height:0;">
@@ -819,17 +891,24 @@
           </div>
           <div class="slot tall" style="max-height:7rem;">%%STAKE_BODY%%</div>
         </div>
-        <div class="ph-media ph-media--sm" style="min-height:6.5rem;align-self:stretch;"><span>Foto equipe · logos parceiros</span></div>
+        <div class="layout-stack stakeholder-stack" style="min-width:0;align-self:stretch;">
+          <div class="slot small">Ritual: steering quinzenal, PMO semanal e decisao por excecao para desbloqueios.</div>
+          <div class="slot small">Escalacao: sponsor comercial, sponsor tecnologia e PO do programa.</div>
+          <div class="slot small">Compliance: DPO consultivo, DPA por fase e trilha de acesso a anexos.</div>
+        </div>
       </div>
     </section>
 
-    <section class="slide">
+    <section class="slide" data-slide-id="risks-next-steps" data-slide-type="risks-next-steps" data-export-mode="editable" data-editable-contract="structured">
       <img class="slide-logo" src="%%LOGO_SRC%%" alt="V4 Colli Associados" width="120" height="36" decoding="async" />
       <span class="slide-label">Riscos &amp; proximos passos</span>
       <div class="layout-stack" style="flex:1;min-height:0;">
         <div class="layout-split layout-split--tight">
           <div class="slot medium" style="max-height:5rem;">%%RISKS%%</div>
-          <div class="ph-media ph-media--sm" style="min-height:5rem;"><span>Matriz risco · heatmap</span></div>
+          <div class="layout-stack risk-stack" style="min-width:0;">
+            <div class="slot small">Mitigar ERP legado com discovery tecnico travado na Sprint 0.</div>
+            <div class="slot small">Conter scope creep com change control, gates e backlog congelado por wave.</div>
+          </div>
         </div>
         <div>
           <p style="margin:0 0 0.35rem;font-size:0.72rem;color:var(--muted);">Proximos passos</p>
@@ -838,7 +917,7 @@
       </div>
     </section>
 
-    <section class="slide">
+    <section class="slide" data-slide-id="closing" data-slide-type="closing-cta" data-export-mode="editable" data-editable-contract="structured">
       <img class="slide-logo" src="%%LOGO_SRC%%" alt="V4 Colli Associados" width="120" height="36" decoding="async" />
       <div class="accent-bar"></div>
       <span class="slide-label">Fechamento</span>
@@ -847,14 +926,14 @@
       <div class="slot tall" style="margin-top:0.75rem;">%%CTA_BODY%%</div>
     </section>
 
-    <section class="slide slide--light">
+    <section class="slide slide--light" data-slide-id="pricing" data-slide-type="pricing-table" data-export-mode="editable" data-editable-contract="table">
       <img class="slide-logo" src="%%LOGO_SRC%%" alt="V4 Colli Associados" width="120" height="36" decoding="async" />
       <span class="slide-label">Proposta comercial — investimento &amp; pacotes</span>
       <p class="muted" style="margin:0 0 0.5rem;font-size:0.72rem;">%%COMMERCIAL_BLURB%%</p>
       <div class="rich-html deck-table-wrap">%%PRICING_TABLE_HTML%%</div>
     </section>
 
-    <section class="slide">
+    <section class="slide" data-slide-id="chart" data-slide-type="chart-insight" data-export-mode="editable" data-editable-contract="svg">
       <img class="slide-logo" src="%%LOGO_SRC%%" alt="V4 Colli Associados" width="120" height="36" decoding="async" />
       <span class="slide-label">Cenario de receita &amp; composicao (ilustrativo)</span>
       <p class="muted" style="margin:0 0 0.45rem;font-size:0.72rem;">%%CHART_CAPTION%%</p>
@@ -862,19 +941,19 @@
         <div class="rich-html deck-chart-wrap deck-chart-wrap--main">%%CHART_SVG_HTML%%</div>
         <aside class="deck-aside">
           %%CHART_LEGEND_HTML%%
-          <div class="ph-media ph-media--sm"><span>Screenshot · mock · evidencia</span></div>
+          <div class="slot small">Leitura sugerida: manter servicos como alavanca de implantacao e migrar gradualmente para MRR.</div>
         </aside>
       </div>
     </section>
 
-    <section class="slide slide-free">
+    <section class="slide slide-free" data-slide-id="free-1" data-slide-type="appendix-freeform" data-export-mode="editable" data-editable-contract="freeform">
       <img class="slide-logo" src="%%LOGO_SRC%%" alt="V4 Colli Associados" width="120" height="36" decoding="async" />
       <span class="slide-label">Livre 1 — HTML customizado</span>
       <p class="hint">Nao deterministico: HTML no tema V4 (preto, vermelho).</p>
       <div class="free-html">%%FREE_HTML_1%%</div>
     </section>
 
-    <section class="slide slide-free">
+    <section class="slide slide-free" data-slide-id="free-2" data-slide-type="appendix-freeform" data-export-mode="editable" data-editable-contract="freeform">
       <img class="slide-logo" src="%%LOGO_SRC%%" alt="V4 Colli Associados" width="120" height="36" decoding="async" />
       <span class="slide-label">Livre 2 — HTML customizado</span>
       <p class="hint">Diagrama, tabela, notas de workshop, ou evidencias.</p>
@@ -958,6 +1037,69 @@
       .replace(/\r\n/g, "\n")
       .trim();
   }
+  function getDeckSlides() {
+    return Array.from(document.querySelectorAll(".deck > section.slide"));
+  }
+  function getSlideMeta(section, index) {
+    var rawMode = String(section.dataset.exportMode || "auto").toLowerCase();
+    var exportMode =
+      rawMode === "editable" || rawMode === "raster" || rawMode === "auto"
+        ? rawMode
+        : "auto";
+    return {
+      index: index,
+      id: section.dataset.slideId || "slide-" + (index + 1),
+      type: section.dataset.slideType || "generic",
+      exportMode: exportMode,
+      editableContract: section.dataset.editableContract || "unknown",
+      isLight: section.classList.contains("slide--light"),
+      section: section
+    };
+  }
+  function isMeaningfulNode(el) {
+    return !!(el && plainText(el).length);
+  }
+  function hasTransparentSlotStyling(el) {
+    var style = String((el && el.getAttribute && el.getAttribute("style")) || "").toLowerCase();
+    return style.indexOf("border:none") !== -1 || (style.indexOf("background:transparent") !== -1 && style.indexOf("padding:0") !== -1);
+  }
+  function inferAutoExportMode(meta) {
+    if (!meta || !meta.section) return "raster";
+    if (meta.editableContract === "freeform" || meta.editableContract === "none") {
+      return "raster";
+    }
+    if (meta.type === "chart-insight") return "raster";
+    if (meta.type === "pricing-table") return "editable";
+    if (meta.section.querySelector(".free-html") && isMeaningfulNode(meta.section.querySelector(".free-html"))) {
+      return "raster";
+    }
+    if (meta.section.querySelector(".rich-html svg")) return "raster";
+    if (meta.section.querySelector(".rich-html table")) return "editable";
+    if (meta.type === "architecture" && meta.section.querySelector(".ph-media")) return "raster";
+    if (meta.type === "kpi-grid") {
+      var kpiZone = meta.section.querySelector(".kpi-zone");
+      if (kpiZone && plainText(kpiZone).split("\n").length > 8) return "raster";
+    }
+    return "editable";
+  }
+  function resolvePptxMode(meta) {
+    if (!meta) return "raster";
+    if (meta.exportMode === "editable" || meta.exportMode === "raster") return meta.exportMode;
+    return inferAutoExportMode(meta);
+  }
+  function exportManifest() {
+    return getDeckSlides().map(function (section, index) {
+      var meta = getSlideMeta(section, index);
+      return {
+        index: meta.index,
+        id: meta.id,
+        type: meta.type,
+        exportMode: meta.exportMode,
+        resolvedMode: resolvePptxMode(meta),
+        editableContract: meta.editableContract
+      };
+    });
+  }
   /** PowerPoint / PptxGenJS nao embute WebP de forma fiavel — converter para PNG. */
   function dataUrlToPngForPptx(dataUrl) {
     return new Promise(function (resolve, reject) {
@@ -1019,18 +1161,21 @@
       img.src = svgDu;
     });
   }
-  function pptxSlotFrame(slide, pres, x, y, w, hBox, isLight) {
+  function pptxSlotFrame(slide, pres, x, y, w, hBox, isLight, lineStyle) {
     if (!slide || !pres || !pres.shapes) return;
+    lineStyle = lineStyle || "dashed";
     var fillC = isLight ? "FFF1F2" : "1C1515";
     var lineC = isLight ? "B91C1C" : "DC2626";
-    var pad = 0.06;
+    var pad = 0.05;
+    var line = { color: lineC, width: 0.75 };
+    if (lineStyle !== "solid") line.dashType = "dash";
     slide.addShape(pres.shapes.RECTANGLE, {
       x: Math.max(0.08, x - pad),
       y: y - pad,
       w: w + 2 * pad,
       h: hBox + 2 * pad,
       fill: { color: fillC },
-      line: { color: lineC, width: 0.5 }
+      line: line
     });
   }
   function htmlTableToPptxRows(table, colors, isLight) {
@@ -1060,11 +1205,704 @@
     });
     return rows;
   }
+  function directElementChildren(node, tagName) {
+    return Array.from(node.children || []).filter(function (child) {
+      return child && child.nodeType === 1 && (!tagName || child.tagName === tagName);
+    });
+  }
+  function extractCardNodes(node) {
+    var directDivs = directElementChildren(node, "DIV");
+    if (directDivs.length >= 2) return directDivs;
+    if (directDivs.length === 1) {
+      var nestedDivs = directElementChildren(directDivs[0], "DIV");
+      if (nestedDivs.length >= 2) return nestedDivs;
+    }
+    return [];
+  }
+  function appendBadgeRowToPptx(slide, node, y, colors, area, pres, isLight) {
+    if (node.querySelector("table")) return y;
+    var spans = Array.from(node.querySelectorAll("span")).filter(function (span) {
+      return !span.closest("table");
+    });
+    if (!spans.length) return y;
+    var x = area.x;
+    var maxX = area.x + area.w;
+    var rowH = 0.28;
+    for (var i = 0; i < spans.length; i++) {
+      var text = plainText(spans[i]);
+      if (!text || text.length < 2) continue;
+      var w = Math.min(1.55, 0.28 + text.length * 0.055);
+      if (x + w > maxX) {
+        x = area.x;
+        y += rowH + 0.08;
+      }
+      slide.addShape(pres.shapes.ROUNDED_RECTANGLE || pres.shapes.RECTANGLE, {
+        x: x - 0.03,
+        y: y - 0.01,
+        w: w + 0.06,
+        h: rowH + 0.03,
+        fill: { color: isLight ? "FEE2E2" : "3A1313" },
+        line: { color: isLight ? "FCA5A5" : "7F1D1D", width: 0.5 }
+      });
+      slide.addText(text, {
+        x: x,
+        y: y,
+        w: w,
+        h: rowH,
+        fontSize: 8,
+        bold: true,
+        color: isLight ? "7F1D1D" : "FCE7E7",
+        align: "center",
+        valign: "mid",
+        margin: 0
+      });
+      x += w + 0.12;
+    }
+    return y + rowH + 0.1;
+  }
+  function appendMetricGridToPptx(slide, node, y, colors, isLight, area, pres) {
+    var cards = extractCardNodes(node);
+    if (!cards.length) return null;
+    var metricLike = cards.every(function (card) {
+      return !!card.querySelector("strong");
+    });
+    if (!metricLike) return null;
+    var cols = area.w >= 4.6 ? Math.min(2, cards.length) : 1;
+    var gapX = 0.16;
+    var gapY = 0.14;
+    var boxW = (area.w - gapX * Math.max(0, cols - 1)) / cols;
+    var boxH = 0.76;
+    for (var i = 0; i < cards.length; i++) {
+      var col = i % cols;
+      var row = Math.floor(i / cols);
+      var card = cards[i];
+      var x = area.x + col * (boxW + gapX);
+      var yy = y + row * (boxH + gapY);
+      var strong = card.querySelector("strong");
+      var value = plainText(strong || card).split("\n")[0] || "";
+      var rest = plainText(card)
+        .replace(value, "")
+        .replace(/^\s+/, "")
+        .trim();
+      pptxSlotFrame(slide, pres, x, yy, boxW, boxH, isLight);
+      if (value) {
+        slide.addText(value, {
+          x: x + 0.08,
+          y: yy + 0.08,
+          w: boxW - 0.16,
+          h: 0.24,
+          fontSize: 14,
+          bold: true,
+          color: i === 0 ? "EF4444" : colors.txt,
+          margin: 0
+        });
+      }
+      if (rest) {
+        slide.addText(rest, {
+          x: x + 0.08,
+          y: yy + 0.34,
+          w: boxW - 0.16,
+          h: 0.28,
+          fontSize: 8,
+          color: colors.mut,
+          margin: 0
+        });
+      }
+    }
+    return y + Math.ceil(cards.length / cols) * (boxH + gapY);
+  }
+  function appendCardGridToPptx(slide, node, y, colors, isLight, area, pres) {
+    var cards = extractCardNodes(node);
+    if (!cards.length) return null;
+    var cols = Math.min(2, cards.length);
+    var gap = 0.2;
+    var boxW = (area.w - gap * Math.max(0, cols - 1)) / cols;
+    var boxH = 1.35;
+    for (var i = 0; i < cards.length; i++) {
+      var card = cards[i];
+      var x = area.x + (i % cols) * (boxW + gap);
+      var yy = y + Math.floor(i / cols) * (boxH + 0.14);
+      pptxSlotFrame(slide, pres, x, yy, boxW, boxH, isLight);
+      var titleEl = card.querySelector("p, h3, strong");
+      var title = plainText(titleEl || card).split("\n")[0] || "";
+      var listItems = Array.from(card.querySelectorAll("li")).map(function (li) {
+        return plainText(li);
+      }).filter(Boolean);
+      if (title) {
+        slide.addText(title, {
+          x: x + 0.08,
+          y: yy + 0.08,
+          w: boxW - 0.16,
+          h: 0.2,
+          fontSize: 9,
+          bold: true,
+          color: "EF4444",
+          margin: 0
+        });
+      }
+      if (listItems.length) {
+        var parts = [];
+        for (var j = 0; j < listItems.length; j++) {
+          parts.push({
+            text: listItems[j],
+            options: { bullet: true, breakLine: j < listItems.length - 1, fontSize: 8, color: colors.txt }
+          });
+        }
+        slide.addText(parts, {
+          x: x + 0.08,
+          y: yy + 0.32,
+          w: boxW - 0.16,
+          h: boxH - 0.4,
+          fontSize: 8,
+          color: colors.txt,
+          margin: 0
+        });
+      } else {
+        var body = plainText(card).replace(title, "").trim();
+        if (body) {
+          slide.addText(body, {
+            x: x + 0.08,
+            y: yy + 0.32,
+            w: boxW - 0.16,
+            h: boxH - 0.4,
+            fontSize: 8,
+            color: colors.txt,
+            margin: 0
+          });
+        }
+      }
+    }
+    return y + Math.ceil(cards.length / cols) * (boxH + 0.14);
+  }
+  function appendSvgChartToPptxNative(slide, node, y, colors, isLight, area, pres) {
+    var svgEl = node.querySelector("svg");
+    if (!svgEl) return null;
+    var titleNode = svgEl.querySelector("text");
+    var title = plainText(titleNode);
+    var rects = Array.from(svgEl.querySelectorAll("rect")).filter(function (rect) {
+      var w = parseFloat(rect.getAttribute("width")) || 0;
+      var h = parseFloat(rect.getAttribute("height")) || 0;
+      return w > 40 && w < 500 && h > 20 && h < 60;
+    });
+    var pctTexts = Array.from(svgEl.querySelectorAll("text"))
+      .map(plainText)
+      .filter(function (text) { return /%/.test(text); });
+    if (!rects.length) return null;
+    var total = rects.reduce(function (sum, rect) {
+      return sum + (parseFloat(rect.getAttribute("width")) || 0);
+    }, 0);
+    if (!total) return null;
+    if (title) {
+      slide.addText(title, {
+        x: area.x,
+        y: y,
+        w: area.w,
+        h: 0.24,
+        fontSize: 9,
+        bold: true,
+        color: colors.mut,
+        align: "center",
+        margin: 0
+      });
+      y += 0.28;
+    }
+    var barX = area.x + 0.08;
+    var barY = y + 0.1;
+    var barW = area.w - 0.16;
+    var barH = 0.46;
+    var cursor = barX;
+    var palette = ["EF4444", "525252", "F87171", "991B1B"];
+    for (var i = 0; i < rects.length; i++) {
+      var share = (parseFloat(rects[i].getAttribute("width")) || 0) / total;
+      var segW = barW * share;
+      slide.addShape(pres.shapes.RECTANGLE, {
+        x: cursor,
+        y: barY,
+        w: segW,
+        h: barH,
+        fill: { color: palette[i % palette.length] },
+        line: { color: palette[i % palette.length], width: 0.5 }
+      });
+      if (pctTexts[i]) {
+        slide.addText(pctTexts[i], {
+          x: cursor,
+          y: barY + 0.1,
+          w: segW,
+          h: 0.18,
+          fontSize: 8,
+          bold: true,
+          color: "FFFFFF",
+          align: "center",
+          margin: 0
+        });
+      }
+      cursor += segW;
+    }
+    slide.addText("0%", {
+      x: area.x,
+      y: barY + 0.56,
+      w: 0.32,
+      h: 0.16,
+      fontSize: 7,
+      color: colors.mut,
+      margin: 0
+    });
+    slide.addText("100%", {
+      x: area.x + area.w - 0.44,
+      y: barY + 0.56,
+      w: 0.44,
+      h: 0.16,
+      fontSize: 7,
+      color: colors.mut,
+      align: "right",
+      margin: 0
+    });
+    return barY + 0.78;
+  }
+  function parseLegendItems(node) {
+    return Array.from(node.querySelectorAll(".deck-chart-legend li")).map(function (li) {
+      var txt = plainText(li);
+      var m = txt.match(/(.+?)\s*\((\d+)%\)\s*$/);
+      return {
+        label: m ? m[1].trim() : txt,
+        value: m ? parseInt(m[2], 10) : null
+      };
+    }).filter(function (item) {
+      return item.label;
+    });
+  }
+  function renderChartInsightSlide(slide, pres, section, colors, isLight) {
+    var M = 0.45;
+    var label = section.querySelector(".slide-label");
+    var caption = section.querySelector("p.muted");
+    var legend = parseLegendItems(section);
+    var note = section.querySelector(".deck-aside .slot, .deck-aside .ph-media, .deck-aside div");
+    var barX = M + 0.2;
+    var barY = 1.45;
+    var barW = 5.15;
+    var barH = 0.56;
+    if (label) {
+      slide.addText(plainText(label), { x: M, y: 0.42, w: 9, h: 0.34, fontSize: 9, color: colors.acc, bold: true, margin: 0 });
+    }
+    if (caption) {
+      slide.addText(plainText(caption), { x: M, y: 0.62, w: 9, h: 0.36, fontSize: 8.5, color: colors.mut, margin: 0 });
+    }
+    slide.addShape(pres.shapes.RECTANGLE, {
+      x: M,
+      y: 1.08,
+      w: 5.45,
+      h: 1.86,
+      fill: { color: isLight ? "FBFBFB" : "151515" },
+      line: { color: "7F1D1D", width: 0.6, dashType: "dash" }
+    });
+    slide.addText("Mix de receita — um cenario (ilustrativo)", {
+      x: M,
+      y: 1.2,
+      w: 5.45,
+      h: 0.2,
+      fontSize: 8,
+      bold: true,
+      color: colors.mut,
+      align: "center",
+      margin: 0
+    });
+    var palette = ["EF4444", "6B7280", "F87171", "991B1B"];
+    var total = legend.reduce(function (sum, item) { return sum + (item.value || 0); }, 0) || 100;
+    var cursor = barX;
+    for (var i = 0; i < legend.length; i++) {
+      var segW = barW * ((legend[i].value || 0) / total);
+      slide.addShape(pres.shapes.ROUNDED_RECTANGLE || pres.shapes.RECTANGLE, {
+        x: cursor,
+        y: barY,
+        w: segW,
+        h: barH,
+        fill: { color: palette[i % palette.length] },
+        line: { color: palette[i % palette.length], width: 0.5 }
+      });
+      slide.addText(String(legend[i].value || "") + "%", {
+        x: cursor,
+        y: barY + 0.16,
+        w: segW,
+        h: 0.14,
+        fontSize: 8,
+        bold: true,
+        color: "FFFFFF",
+        align: "center",
+        margin: 0
+      });
+      cursor += segW;
+    }
+    slide.addText("0%", { x: barX, y: barY + 0.68, w: 0.25, h: 0.12, fontSize: 7, color: colors.mut, margin: 0 });
+    slide.addText("100%", { x: barX + barW - 0.35, y: barY + 0.68, w: 0.35, h: 0.12, fontSize: 7, color: colors.mut, align: "right", margin: 0 });
+    slide.addText("Barra empilhada — segmentos somam 100%", {
+      x: M,
+      y: barY + 0.84,
+      w: 5.45,
+      h: 0.12,
+      fontSize: 6.5,
+      color: colors.mut,
+      align: "center",
+      margin: 0
+    });
+    var lx = 6.1;
+    var ly = 1.18;
+    for (var j = 0; j < legend.length; j++) {
+      slide.addShape(pres.shapes.ROUNDED_RECTANGLE || pres.shapes.RECTANGLE, {
+        x: lx,
+        y: ly + j * 0.38,
+        w: 0.12,
+        h: 0.12,
+        fill: { color: palette[j % palette.length] },
+        line: { color: palette[j % palette.length], width: 0.5 }
+      });
+      slide.addText(legend[j].label + " (" + legend[j].value + "%)", {
+        x: lx + 0.18,
+        y: ly + j * 0.38 - 0.01,
+        w: 2.95,
+        h: 0.16,
+        fontSize: 8,
+        color: colors.mut,
+        margin: 0
+      });
+    }
+    if (note) {
+      pptxSlotFrame(slide, pres, 6.1, 2.18, 3.35, 0.9, isLight);
+      slide.addText(plainText(note), {
+        x: 6.2,
+        y: 2.25,
+        w: 3.15,
+        h: 0.78,
+        fontSize: 8.5,
+        color: colors.txt,
+        margin: 0
+      });
+    }
+  }
+  function renderCoverSlide(slide, pres, section, colors, isLight) {
+    var M = 0.45;
+    var label = section.querySelector(".slide-label");
+    var title = section.querySelector("h1");
+    var subtitle = section.querySelector("h2");
+    var meta = section.querySelector("p");
+    var rightLead = section.querySelector(".hero-preview__lead");
+    var chips = Array.from(section.querySelectorAll(".hero-preview__chip"));
+    if (section.querySelector(".accent-bar")) {
+      slide.addShape(pres.shapes.RECTANGLE, {
+        x: M,
+        y: 0.34,
+        w: 0.78,
+        h: 0.04,
+        fill: { color: "EF4444" },
+        line: { color: "EF4444", width: 0.3 }
+      });
+    }
+    if (label) {
+      slide.addText(plainText(label), {
+        x: M,
+        y: 0.48,
+        w: 4.8,
+        h: 0.24,
+        fontSize: 9,
+        bold: true,
+        color: colors.acc,
+        margin: 0
+      });
+    }
+    if (title) {
+      slide.addText(plainText(title), {
+        x: M,
+        y: 0.72,
+        w: 5.05,
+        h: 0.5,
+        fontSize: 15.5,
+        bold: true,
+        color: colors.txt,
+        margin: 0
+      });
+    }
+    if (subtitle) {
+      slide.addText(plainText(subtitle), {
+        x: M,
+        y: 1.16,
+        w: 5.05,
+        h: 0.34,
+        fontSize: 10,
+        color: colors.mut,
+        margin: 0
+      });
+    }
+    if (meta) {
+      pptxSlotFrame(slide, pres, M, 1.76, 4.55, 0.58, isLight);
+      slide.addText(plainText(meta), {
+        x: M + 0.1,
+        y: 1.84,
+        w: 4.32,
+        h: 0.38,
+        fontSize: 7.8,
+        color: colors.mut,
+        margin: 0
+      });
+    }
+    var panelX = 5.65;
+    pptxSlotFrame(slide, pres, panelX, 0.9, 3.95, 0.74, isLight);
+    if (rightLead) {
+      slide.addText(plainText(rightLead), {
+        x: panelX + 0.12,
+        y: 0.99,
+        w: 3.7,
+        h: 0.54,
+        fontSize: 8.6,
+        color: colors.txt,
+        margin: 0
+      });
+    }
+    for (var i = 0; i < chips.length; i++) {
+      var col = i % 2;
+      var row = Math.floor(i / 2);
+      var bx = panelX + col * 2.0;
+      var by = 1.74 + row * 0.44;
+      pptxSlotFrame(slide, pres, bx, by, 1.78, 0.24, isLight);
+      slide.addText(plainText(chips[i]), {
+        x: bx + 0.05,
+        y: by + 0.03,
+        w: 1.68,
+        h: 0.18,
+        fontSize: 7.7,
+        bold: true,
+        color: colors.txt,
+        align: "center",
+        margin: 0
+      });
+    }
+  }
+  function renderTimelineSlide(slide, pres, section, colors, isLight) {
+    var M = 0.45;
+    var label = section.querySelector(".slide-label");
+    var title = section.querySelector("h2");
+    var body = section.querySelector("div.slot");
+    var items = Array.from(section.querySelectorAll("ul.compact > li"));
+    if (label) {
+      slide.addText(plainText(label), {
+        x: M,
+        y: 0.42,
+        w: 9,
+        h: 0.34,
+        fontSize: 9,
+        bold: true,
+        color: colors.acc,
+        margin: 0
+      });
+    }
+    if (title) {
+      slide.addText(plainText(title), {
+        x: M,
+        y: 0.68,
+        w: 9,
+        h: 0.34,
+        fontSize: 15.5,
+        bold: true,
+        color: colors.txt,
+        margin: 0
+      });
+    }
+    if (body) {
+      pptxSlotFrame(slide, pres, M, 1.12, 9, 0.8, isLight);
+      slide.addText(plainText(body), {
+        x: M + 0.1,
+        y: 1.2,
+        w: 8.8,
+        h: 0.62,
+        fontSize: 9.4,
+        color: colors.txt,
+        margin: 0
+      });
+    }
+    var y = 2.18;
+    for (var i = 0; i < items.length; i++) {
+      var strong = items[i].querySelector("strong");
+      var strongText = plainText(strong);
+      var fullText = plainText(items[i]);
+      var rest = strongText ? fullText.replace(strongText, "").trim() : fullText;
+      var runs = [];
+      if (strongText) {
+        runs.push({ text: strongText + " ", options: { bold: true, fontSize: 9.4, color: colors.txt } });
+      }
+      if (rest) {
+        runs.push({ text: rest, options: { fontSize: 9.4, color: colors.txt } });
+      }
+      slide.addText(runs.length ? runs : fullText, {
+        x: M,
+        y: y,
+        w: 9,
+        h: 0.24,
+        fontSize: 9.4,
+        color: colors.txt,
+        margin: 0
+      });
+      y += 0.3;
+    }
+  }
+  function renderArchitectureSlide(slide, pres, section, colors, isLight) {
+    var M = 0.45;
+    var label = section.querySelector(".slide-label");
+    var left = section.querySelector(".layout-split > :first-child");
+    var right = section.querySelector(".architecture-stack");
+    var title = left ? left.querySelector("h2") : null;
+    var body = left ? left.querySelector(".slot.tall") : null;
+    var badgesWrap = left ? left.querySelector("div[style*='overflow:hidden']") : null;
+    var flowLabel = right ? right.querySelector("p.muted") : null;
+    var cards = right ? Array.from(right.querySelectorAll(".architecture-stack__card")) : [];
+    if (label) {
+      slide.addText(plainText(label), {
+        x: M,
+        y: 0.42,
+        w: 9,
+        h: 0.34,
+        fontSize: 9,
+        bold: true,
+        color: colors.acc,
+        margin: 0
+      });
+    }
+    if (title) {
+      slide.addText(plainText(title), {
+        x: M,
+        y: 0.68,
+        w: 4.8,
+        h: 0.34,
+        fontSize: 15.5,
+        bold: true,
+        color: colors.txt,
+        margin: 0
+      });
+    }
+    if (body) {
+      pptxSlotFrame(slide, pres, M, 1.1, 4.95, 0.9, isLight);
+      slide.addText(plainText(body), {
+        x: M + 0.1,
+        y: 1.19,
+        w: 4.75,
+        h: 0.72,
+        fontSize: 8.9,
+        color: colors.txt,
+        margin: 0
+      });
+    }
+    if (badgesWrap) {
+      appendBadgeRowToPptx(slide, badgesWrap, 2.14, colors, { x: M, w: 4.8 }, pres, isLight);
+    }
+    if (flowLabel) {
+      slide.addText(plainText(flowLabel), {
+        x: 5.88,
+        y: 0.72,
+        w: 3.62,
+        h: 0.2,
+        fontSize: 7.5,
+        color: colors.mut,
+        margin: 0
+      });
+    }
+    for (var i = 0; i < cards.length; i++) {
+      var y = 1.0 + i * 0.72;
+      pptxSlotFrame(slide, pres, 5.88, y, 3.55, 0.54, isLight);
+      slide.addText(plainText(cards[i]), {
+        x: 5.98,
+        y: y + 0.08,
+        w: 3.35,
+        h: 0.38,
+        fontSize: 8.5,
+        color: colors.txt,
+        margin: 0
+      });
+    }
+  }
+  function renderRisksNextStepsSlide(slide, pres, section, colors, isLight) {
+    var M = 0.45;
+    var label = section.querySelector(".slide-label");
+    var riskMain = section.querySelector(".layout-split .slot.medium");
+    var riskCards = Array.from(section.querySelectorAll(".risk-stack .slot"));
+    var nextLabel = Array.from(section.querySelectorAll("p")).find(function (p) {
+      return /proximos passos/i.test(plainText(p));
+    });
+    var nextSteps = section.querySelector(".slot.tall");
+    if (label) {
+      slide.addText(plainText(label), {
+        x: M,
+        y: 0.42,
+        w: 9,
+        h: 0.34,
+        fontSize: 9,
+        bold: true,
+        color: colors.acc,
+        margin: 0
+      });
+    }
+    if (riskMain) {
+      pptxSlotFrame(slide, pres, M, 0.92, 4.45, 0.7, isLight);
+      slide.addText(plainText(riskMain), {
+        x: M + 0.1,
+        y: 1.0,
+        w: 4.25,
+        h: 0.54,
+        fontSize: 9,
+        color: colors.txt,
+        margin: 0
+      });
+    }
+    for (var i = 0; i < riskCards.length; i++) {
+      var ry = 0.92 + i * 0.56;
+      pptxSlotFrame(slide, pres, 5.15, ry, 4.3, 0.42, isLight);
+      slide.addText(plainText(riskCards[i]), {
+        x: 5.25,
+        y: ry + 0.07,
+        w: 4.1,
+        h: 0.28,
+        fontSize: 8.6,
+        color: colors.txt,
+        margin: 0
+      });
+    }
+    if (nextLabel) {
+      slide.addText(plainText(nextLabel), {
+        x: M,
+        y: 3.95,
+        w: 3,
+        h: 0.2,
+        fontSize: 7.6,
+        color: colors.mut,
+        margin: 0
+      });
+    }
+    if (nextSteps) {
+      pptxSlotFrame(slide, pres, M, 4.18, 9, 0.78, isLight);
+      slide.addText(plainText(nextSteps), {
+        x: M + 0.1,
+        y: 4.28,
+        w: 8.8,
+        h: 0.58,
+        fontSize: 9.2,
+        color: colors.txt,
+        margin: 0
+      });
+    }
+  }
   async function appendRichHtmlToPptx(slide, node, y, colors, isLight, area, pres) {
     area = area || { x: 0.45, w: 9 };
     var x0 = area.x;
     var w0 = area.w;
     var y2 = y;
+    var badgesY = appendBadgeRowToPptx(slide, node, y2, colors, area, pres, isLight);
+    if (badgesY !== y2) {
+      y2 = badgesY;
+    }
+    var metricGridY = appendMetricGridToPptx(slide, node, y2, colors, isLight, area, pres);
+    if (metricGridY != null) {
+      return metricGridY + 0.06;
+    }
+    var cardGridY = appendCardGridToPptx(slide, node, y2, colors, isLight, area, pres);
+    if (cardGridY != null) {
+      return cardGridY + 0.06;
+    }
     var tbl = node.querySelector("table");
     if (tbl) {
       var rows = htmlTableToPptxRows(tbl, colors, isLight);
@@ -1075,7 +1913,7 @@
         var cw = innerW / ncol;
         for (var ci = 0; ci < ncol; ci++) colW.push(cw);
         var th = Math.min(3.2, 0.4 + rows.length * 0.36);
-        if (pres) pptxSlotFrame(slide, pres, x0, y2, innerW, th, isLight);
+        if (pres) pptxSlotFrame(slide, pres, x0, y2, innerW, th, isLight, "solid");
         try {
           slide.addTable(rows, {
             x: x0,
@@ -1094,6 +1932,10 @@
     }
     var svgEl = node.querySelector("svg");
     if (svgEl) {
+      var nativeChartY = appendSvgChartToPptxNative(slide, node, y2, colors, isLight, area, pres);
+      if (nativeChartY != null) {
+        return nativeChartY + 0.08;
+      }
       try {
         var svgPack = await svgToPngDataUrlForPptx(svgEl);
         var pngC = svgPack.dataUrl;
@@ -1113,6 +1955,10 @@
       }
     }
     if (!tbl && !svgEl) {
+      var badgeOnly = node.querySelectorAll("span").length && !node.querySelector("li, strong, h3, .slot, table, svg");
+      if (badgeOnly) {
+        return y2;
+      }
       var rt = plainText(node);
       if (rt) {
         var est = Math.min(2.6, 0.4 + rt.split("\n").length * 0.2);
@@ -1126,7 +1972,7 @@
   /**
    * Export PPTX: percorre conteudo de uma coluna (layout-split, layout-stack, aside).
    */
-  async function pptxWalkColumn(slide, pres, el, x0, w0, y0, colors, isLight) {
+  async function pptxWalkColumn(slide, pres, el, x0, w0, y0, colors, isLight, ctx) {
     var y = y0;
     var chs = Array.from(el.children || []);
     for (var i = 0; i < chs.length; i++) {
@@ -1156,14 +2002,14 @@
         var yMax = y;
         for (var sj = 0; sj < sub.length; sj++) {
           var sx = x0 + sj * (sw + sgap);
-          var yj = await pptxWalkColumn(slide, pres, sub[sj], sx, sw, yRow, colors, isLight);
+          var yj = await pptxWalkColumn(slide, pres, sub[sj], sx, sw, yRow, colors, isLight, ctx);
           yMax = Math.max(yMax, yj);
         }
         y = yMax;
         continue;
       }
       if (ch.classList && ch.classList.contains("layout-stack")) {
-        y = await pptxWalkColumn(slide, pres, ch, x0, w0, y, colors, isLight);
+        y = await pptxWalkColumn(slide, pres, ch, x0, w0, y, colors, isLight, ctx);
         continue;
       }
       if (
@@ -1173,7 +2019,7 @@
           ch.classList.contains("deck-aside") ||
           ch.tagName === "ASIDE")
       ) {
-        y = await pptxWalkColumn(slide, pres, ch, x0, w0, y, colors, isLight);
+        y = await pptxWalkColumn(slide, pres, ch, x0, w0, y, colors, isLight, ctx);
         continue;
       }
       if (ch.matches("ul.deck-chart-legend")) {
@@ -1190,21 +2036,39 @@
       if (ch.matches("ul.compact")) {
         var lisC = ch.querySelectorAll(":scope > li");
         if (lisC.length) {
-          var partsC = [];
-          for (var uc = 0; uc < lisC.length; uc++) {
-            partsC.push({
-              text: plainText(lisC[uc]),
-              options: { bullet: true, breakLine: uc < lisC.length - 1, fontSize: 9, color: colors.txt }
-            });
+          if (ctx && ctx.slideType === "timeline") {
+            for (var uc = 0; uc < lisC.length; uc++) {
+              slide.addText(plainText(lisC[uc]), {
+                x: x0,
+                y: y,
+                w: w0,
+                h: 0.24,
+                fontSize: 9,
+                bold: true,
+                color: colors.txt,
+                valign: "top",
+                margin: 0
+              });
+              y += 0.28;
+            }
+            y += 0.04;
+          } else {
+            var partsC = [];
+            for (var uc2 = 0; uc2 < lisC.length; uc2++) {
+              partsC.push({
+                text: plainText(lisC[uc2]),
+                options: { bullet: true, breakLine: uc2 < lisC.length - 1, fontSize: 9, color: colors.txt }
+              });
+            }
+            var uhc = Math.min(2.4, 0.26 + lisC.length * 0.28);
+            slide.addText(partsC, { x: x0, y: y, w: w0, h: uhc, fontSize: 9, color: colors.txt, valign: "top", margin: 0 });
+            y += uhc + 0.08;
           }
-          var uhc = Math.min(2.4, 0.26 + lisC.length * 0.28);
-          slide.addText(partsC, { x: x0, y: y, w: w0, h: uhc, fontSize: 9, color: colors.txt, valign: "top", margin: 0 });
-          y += uhc + 0.08;
         }
         continue;
       }
       if (ch.matches("h1")) {
-        if (ch.classList.contains("slot") && plainText(ch)) {
+        if (ch.classList.contains("slot") && plainText(ch) && !hasTransparentSlotStyling(ch)) {
           var szh1 = 0.74;
           pptxSlotFrame(slide, pres, x0, y, w0, szh1, isLight);
           slide.addText(plainText(ch), { x: x0 + 0.1, y: y + 0.05, w: w0 - 0.2, h: szh1, fontSize: 22, bold: true, color: colors.txt, valign: "top", margin: 0 });
@@ -1216,7 +2080,7 @@
         continue;
       }
       if (ch.matches("h2")) {
-        if (ch.classList.contains("slot") && plainText(ch)) {
+        if (ch.classList.contains("slot") && plainText(ch) && !hasTransparentSlotStyling(ch)) {
           var szh2 = 0.5;
           pptxSlotFrame(slide, pres, x0, y, w0, szh2, isLight);
           slide.addText(plainText(ch), { x: x0 + 0.1, y: y + 0.05, w: w0 - 0.2, h: szh2, fontSize: 14, color: colors.mut, valign: "top", margin: 0 });
@@ -1268,6 +2132,11 @@
         continue;
       }
       if (ch.classList && ch.classList.contains("kpi-zone")) {
+        var kpiY = appendMetricGridToPptx(slide, ch, y, colors, isLight, { x: x0, w: w0 }, pres);
+        if (kpiY != null) {
+          y = kpiY + 0.08;
+          continue;
+        }
         var fk = plainText(ch);
         if (fk) {
           var estK = Math.min(2.5, 0.32 + fk.split("\n").length * 0.2);
@@ -1276,6 +2145,13 @@
           y += estK + 0.16;
         }
         continue;
+      }
+      if (ch.tagName === "DIV" && (ch.querySelector("span") || extractCardNodes(ch).length >= 2)) {
+        var richY = await appendRichHtmlToPptx(slide, ch, y, colors, isLight, { x: x0, w: w0 }, pres);
+        if (richY !== y) {
+          y = richY;
+          continue;
+        }
       }
       if (ch.matches("p") && !ch.classList.contains("slot")) {
         var pt = plainText(ch);
@@ -1326,12 +2202,19 @@
   function jpegDataUrlFromCanvas(canvas, quality) {
     return canvas.toDataURL("image/jpeg", quality || 0.9);
   }
+  async function addRasterSlideToPptx(pres, section, meta, index, total) {
+    var canvas = await rasterizeSlide(section, index, total);
+    var dataUrl = jpegDataUrlFromCanvas(canvas, 0.9);
+    var slide = pres.addSlide();
+    slide.addImage({ data: dataUrl, x: 0, y: 0, w: 10, h: 5.625 });
+  }
 
   /**
    * PPTX editavel: mapeia o DOM do slide para texto, tabelas e SVG (logo WebP -> PNG).
    */
   async function addEditableSlideFromDom(pres, section) {
     var isLight = section.classList.contains("slide--light");
+    var slideType = section.dataset.slideType || "generic";
     var slide = pres.addSlide();
     var M = 0.45;
     var bg = isLight ? "F4F4F5" : "141414";
@@ -1378,10 +2261,48 @@
       }
     }
     var y = 0.42;
+    if (slideType === "cover") {
+      renderCoverSlide(slide, pres, section, colors, isLight);
+      return;
+    }
+    if (slideType === "timeline") {
+      renderTimelineSlide(slide, pres, section, colors, isLight);
+      return;
+    }
+    if (slideType === "architecture") {
+      renderArchitectureSlide(slide, pres, section, colors, isLight);
+      return;
+    }
+    if (slideType === "risks-next-steps") {
+      renderRisksNextStepsSlide(slide, pres, section, colors, isLight);
+      return;
+    }
+    if (slideType === "chart-insight") {
+      renderChartInsightSlide(slide, pres, section, colors, isLight);
+      return;
+    }
 
     function addUlCompact(ul) {
       var lis = ul.querySelectorAll(":scope > li");
       if (!lis.length) return;
+      if (slideType === "timeline") {
+        for (var t = 0; t < lis.length; t++) {
+          slide.addText(plainText(lis[t]), {
+            x: M + 0.18,
+            y: y,
+            w: 8.7,
+            h: 0.26,
+            fontSize: 10,
+            bold: true,
+            color: colors.txt,
+            valign: "top",
+            margin: 0
+          });
+          y += 0.3;
+        }
+        y += 0.06;
+        return;
+      }
       var parts = [];
       for (var u = 0; u < lis.length; u++) {
         parts.push({
@@ -1438,7 +2359,7 @@
         var maxY = y;
         for (var lix = 0; lix < colNodes.length; lix++) {
           var cx = M + lix * (colW + gap);
-          var yEnd = await pptxWalkColumn(slide, pres, colNodes[lix], cx, colW, yStart, colors, isLight);
+          var yEnd = await pptxWalkColumn(slide, pres, colNodes[lix], cx, colW, yStart, colors, isLight, { slideType: slideType });
           maxY = Math.max(maxY, yEnd);
         }
         y = maxY + 0.12;
@@ -1529,7 +2450,7 @@
       }
       if (node.matches("h1")) {
         var h1h = 0.82;
-        if (node.classList.contains("slot")) {
+        if (node.classList.contains("slot") && !hasTransparentSlotStyling(node)) {
           pptxSlotFrame(slide, pres, M, y, 9, h1h, isLight);
           slide.addText(plainText(node), { x: M + 0.1, y: y + 0.05, w: 8.8, h: h1h, fontSize: 26, bold: true, color: colors.txt, valign: "top", margin: 0 });
           y += h1h + 0.2;
@@ -1541,7 +2462,7 @@
       }
       if (node.matches("h2")) {
         var h2h = 0.52;
-        if (node.classList.contains("slot")) {
+        if (node.classList.contains("slot") && !hasTransparentSlotStyling(node)) {
           pptxSlotFrame(slide, pres, M, y, 9, h2h, isLight);
           slide.addText(plainText(node), { x: M + 0.1, y: y + 0.05, w: 8.8, h: h2h, fontSize: 15, color: colors.mut, valign: "top", margin: 0 });
           y += h2h + 0.2;
@@ -1597,6 +2518,11 @@
         continue;
       }
       if (node.classList && node.classList.contains("kpi-zone")) {
+        var kpiMainY = appendMetricGridToPptx(slide, node, y, colors, isLight, { x: M, w: 9 }, pres);
+        if (kpiMainY != null) {
+          y = kpiMainY + 0.08;
+          continue;
+        }
         var fk = plainText(node);
         if (fk) {
           var estK = Math.min(2.8, 0.35 + fk.split("\n").length * 0.22);
@@ -1605,6 +2531,13 @@
           y += estK + 0.18;
         }
         continue;
+      }
+      if (node.tagName === "DIV" && (node.querySelector("span") || extractCardNodes(node).length >= 2)) {
+        var blockY = await appendRichHtmlToPptx(slide, node, y, colors, isLight, { x: M, w: 9 }, pres);
+        if (blockY !== y) {
+          y = blockY;
+          continue;
+        }
       }
       if (node.matches("p") && !node.classList.contains("slot")) {
         var pt = plainText(node);
@@ -1632,7 +2565,7 @@
       window.alert("jsPDF nao carregou. Verifique a rede e tente de novo.");
       return;
     }
-    var slides = document.querySelectorAll(".deck > section.slide");
+    var slides = getDeckSlides();
     if (!slides.length) {
       window.alert("Nenhum slide encontrado.");
       return;
@@ -1676,7 +2609,7 @@
       window.alert("PptxGenJS nao carregou. Verifique a rede. Skill de referencia: pptx/pptxgenjs.md");
       return;
     }
-    var slides = document.querySelectorAll(".deck > section.slide");
+    var slides = getDeckSlides();
     if (!slides.length) {
       window.alert("Nenhum slide encontrado.");
       return;
@@ -1687,15 +2620,37 @@
       var pres = new Ctor();
       pres.layout = "LAYOUT_16x9";
       pres.title = document.title || "Deck";
+      var stats = { editable: 0, raster: 0, fallback: 0 };
       for (var e = 0; e < slides.length; e++) {
-        setProgress("PPTX editável: slide " + (e + 1) + " / " + slides.length + "…");
-        await addEditableSlideFromDom(pres, slides[e]);
+        var meta = getSlideMeta(slides[e], e);
+        var resolvedMode = resolvePptxMode(meta);
+        var prefix = resolvedMode === "editable" ? "editavel" : "raster";
+        setProgress("PPTX final (" + prefix + "): slide " + (e + 1) + " / " + slides.length + "…");
+        if (resolvedMode === "editable") {
+          try {
+            await addEditableSlideFromDom(pres, slides[e]);
+            stats.editable += 1;
+          } catch (editableErr) {
+            console.warn("Fallback para raster no slide", meta.id, editableErr);
+            await addRasterSlideToPptx(pres, slides[e], meta, e, slides.length);
+            stats.raster += 1;
+            stats.fallback += 1;
+          }
+        } else {
+          await addRasterSlideToPptx(pres, slides[e], meta, e, slides.length);
+          stats.raster += 1;
+        }
       }
       await pres.writeFile({ fileName: safeFilename(document.title) + ".pptx" });
-      setProgress("PPTX editável gerado.");
+      setProgress(
+        "PPTX final gerado. " +
+        stats.editable + " editavel(eis), " +
+        stats.raster + " raster, " +
+        stats.fallback + " fallback(s)."
+      );
     } catch (err2) {
       console.error(err2);
-      window.alert("Erro ao gerar PPTX editável: " + (err2 && err2.message ? err2.message : err2));
+      window.alert("Erro ao gerar PPTX final: " + (err2 && err2.message ? err2.message : err2));
       setProgress("");
     } finally {
       setBusy(false);
@@ -1710,7 +2665,7 @@
         window.alert("PptxGenJS nao carregou. Verifique a rede.");
         return;
       }
-      var slidesR = document.querySelectorAll(".deck > section.slide");
+      var slidesR = getDeckSlides();
       if (!slidesR.length) {
         window.alert("Nenhum slide encontrado.");
         return;
@@ -1747,6 +2702,49 @@
       window.print();
     });
   }
+  window.__DECK_EXPORT_API__ = {
+    exportManifest: exportManifest,
+    async buildHybridPptx(payload) {
+      payload = payload || {};
+      var Ctor = pptxCtor();
+      if (!Ctor) {
+        throw new Error("PptxGenJS nao carregou no contexto do deck.");
+      }
+      var slides = getDeckSlides();
+      var imagesByIndex = payload.imagesByIndex || {};
+      var pres = new Ctor();
+      pres.layout = "LAYOUT_16x9";
+      pres.title = payload.title || document.title || "Deck";
+      var stats = { editable: 0, raster: 0, fallback: 0 };
+      for (var i = 0; i < slides.length; i++) {
+        var meta = getSlideMeta(slides[i], i);
+        var resolvedMode = resolvePptxMode(meta);
+        if (resolvedMode === "editable") {
+          try {
+            await addEditableSlideFromDom(pres, slides[i]);
+            stats.editable += 1;
+            continue;
+          } catch (editableErr) {
+            console.warn("Hybrid fallback para raster no slide", meta.id, editableErr);
+            resolvedMode = "raster";
+            stats.fallback += 1;
+          }
+        }
+        if (resolvedMode === "raster") {
+          var dataUrl = imagesByIndex[String(i)] || imagesByIndex[i];
+          if (!dataUrl) {
+            throw new Error("Imagem raster ausente para o slide " + meta.id + " (#" + i + ")");
+          }
+          var slide = pres.addSlide();
+          slide.addImage({ data: dataUrl, x: 0, y: 0, w: 10, h: 5.625 });
+          stats.raster += 1;
+        }
+      }
+      var base64 = await pres.write({ outputType: "base64" });
+      return { base64: base64, stats: stats };
+    }
+  };
+  window.__DECK_EXPORT_MANIFEST__ = exportManifest();
 })();
   </script>
 </body>
